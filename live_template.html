@@ -26,6 +26,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:8px 12px;font-size:12.5px}
 .stat b{font-size:19px;display:block}
 .profileNote{margin-top:11px;font-size:12px;opacity:.82}
+.learn-line{margin-top:8px;font-size:12px;opacity:.85;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.learn-line button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:2px 9px;font-size:11.5px;cursor:pointer}
+.toast{position:fixed;right:16px;bottom:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:none}
 .nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e5e7eb;padding:9px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .nav .inner{max-width:1100px;margin:0 auto;padding:0 18px}
 .filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
@@ -111,6 +115,7 @@ footer a{color:#2563eb;text-decoration:none}
   <div class="profiles" id="profiles"></div>
   <div class="stat-row" id="stats"></div>
   <div class="profileNote" id="profileNote"></div>
+  <div class="learn-line" id="learnLine"></div>
 </div></header>
 
 <nav class="nav"><div class="inner">
@@ -138,6 +143,7 @@ footer a{color:#2563eb;text-decoration:none}
     <p>排序为本地画像加权结果，不代表 AI HOT 官方排序；引用数字/政策请以原文为准</p>
   </footer>
 </main>
+<div id="toast" class="toast"></div>
 
 <script>
 const FALLBACK = /*__FALLBACK__*/{"ts":"","items":[]};
@@ -153,29 +159,29 @@ const POLICY = ["政策","监管","法规","立法","备案","标准","白皮书
 const ECO = ["开源","社区","生态","开发者","插件","工具链","sdk","api","开放平台","共建","联盟","基金会","github","hugging face","modelscope","魔搭","gitee","贡献者","maintainer","release","版本发布"];
 
 const DOMAINS = {
-  thermal: ["热传导","散热","热管理","温度场","热仿真","热设计","封装散热","液冷","风冷","均温板","热阻","thermal","cooling"],
-  pde: ["偏微分方程","有限元","有限差分","网格","求解器","数值","仿真","神经算子","算子学习","代理模型","降阶模型","计算数学","数值线性代数","稀疏矩阵","科学计算","pde","scientific computing","simulation","solver","mesh","fem","cfd","neural operator","pinn","fno","deeponet","surrogate","finite element","finite difference","numerical","reduced order model"],
-  parallel: ["并行","高性能计算","昇腾","多卡","万卡","并行计算","加速器","加速比","cuda","triton","hpc","mpi","openmp"],
-  math: ["定理证明","形式化验证","数学证明","自动证明","机器验证","形式化","定理","群论","数论","组合数学","拓扑","lean","coq","isabelle"],
+  // 前沿理论：论文 / 方法 / 模型机制，而不是具体数学课题
+  theory: ["论文","理论","预训练","后训练","蒸馏","rlhf","dpo","scaling law","世界模型","可解释",
+           "自监督","对比学习","表征学习","检索增强","rag","transformer","diffusion","moe","稀疏","幻觉","推理模型"],
   dev: ["mcp","a2a","sdk","cli","ide","github","langchain","vllm","sglang","插件","工具链","微调","部署","workflow","工作流"],
   business: ["融资","估值","营收","毛利","ipo","上市","定价","订阅","商业化","客户","市场","份额","收购","财报","revenue","funding","valuation"]
 };
 
 const PROFILES = {
-  research: {label:"科研 / AI4Science", groups:["thermal","pde","math","parallel"],
-    w:{base:.40,domain:.30,policy:.12,domestic:.13,eco:.05},
-    bonus:{thermal:26,math:24,pde:22,parallel:12},
-    insp:{thermal:"与芯片散热 / 热传导求解直接相关，留意其建模假设与验证口径。",pde:"方法类线索，可评估迁移到粗网格修正或 PDE 代理建模。",parallel:"并行 / 加速策略可对照你求解器的性能瓶颈。",math:"数学 / 形式化线索，可能启发课程选题或验证方法。"}},
+  // 主画像：国内生态 + 政策 + 国内外 AI 前沿理论；不再按数学课题加权
+  research: {label:"前沿理论", groups:["theory"],
+    w:{base:.25,domain:.25,policy:.20,domestic:.20,eco:.10},
+    bonus:{theory:15},
+    insp:{theory:"理论 / 方法线索，可跟踪其假设、评测方式与可复现性。"}},
   dev: {label:"开发者", groups:["dev"],
-    w:{base:.40,domain:.30,policy:.10,domestic:.12,eco:.08},
-    bonus:{dev:20},
+    w:{base:.30,domain:.30,policy:.10,domestic:.20,eco:.10},
+    bonus:{dev:15},
     insp:{dev:"工具链 / 协议动向，可评估接入你的工作流或替换现有组件的成本。"}},
   business: {label:"产品 / 商业", groups:["business"],
-    w:{base:.45,domain:.25,policy:.15,domestic:.10,eco:.05},
-    bonus:{business:18},
+    w:{base:.35,domain:.25,policy:.15,domestic:.20,eco:.05},
+    bonus:{business:15},
     insp:{business:"可留意其商业模式、定价与落地场景，判断是否有可复用的切口。"}},
   general: {label:"通用", groups:[],
-    w:{base:.55,domain:.10,policy:.15,domestic:.20,eco:.00},
+    w:{base:.35,domain:.10,policy:.20,domestic:.30,eco:.05},
     bonus:{},
     insp:{}}
 };
@@ -186,6 +192,59 @@ let state = {items:[], profile:"research", filter:"all", live:true, loadedAt:nul
   const p=qp.get("profile"); if(p&&PROFILES[p]) state.profile=p;
   const f=qp.get("filter"); if(["all","dom","pol","rel"].includes(f)) state.filter=f;
 })();
+
+// ===== 点击学习：按类别 / 标签的平滑 CTR 给后续排序加权，本地存储 =====
+const LEARN_KEY="ai_news_learn_v1", LEARN_MAX=15;
+let LEARN=loadLearn();
+const SESSION_SEEN=new Set();
+const CAT_LABEL={"ai-models":"模型","ai-products":"产品","industry":"行业","paper":"论文","tip":"技巧","opinion":"观点","other":"其他"};
+function loadLearn(){
+  try{
+    const o=JSON.parse(localStorage.getItem(LEARN_KEY));
+    if(o&&o.clicks&&o.impr) return {on:o.on!==false,impr:o.impr,clicks:o.clicks};
+  }catch(e){}
+  return {on:true,impr:{cat:{},tag:{}},clicks:{cat:{},tag:{}}};
+}
+function saveLearn(){try{localStorage.setItem(LEARN_KEY,JSON.stringify(LEARN));}catch(e){}}
+function bump(o,k,n){o[k]=(o[k]||0)+n;}
+function catKey(it){return it.category||"other";}
+function tagKeys(it){const a=[];if(it._dom)a.push("dom");if(it._pol)a.push("pol");if(it._eco)a.push("eco");if(it._grp)a.push("theory");return a;}
+function aff(kind,key){const c=(LEARN.clicks[kind]||{})[key]||0;const i=(LEARN.impr[kind]||{})[key]||0;return (c+0.5)/(i+5);}
+function learnBoost(it){
+  if(!LEARN.on) return 0;
+  const catAff=aff("cat",catKey(it));
+  const tags=tagKeys(it);
+  const tagAff=tags.length?tags.reduce((s,t)=>s+aff("tag",t),0)/tags.length:0;
+  return Math.round(LEARN_MAX*(0.6*catAff+0.4*tagAff));
+}
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById("toast"); if(!t) return;
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove("show");},1700);
+}
+function renderLearnLine(){
+  const line=document.getElementById("learnLine"); if(!line) return;
+  const total=Object.keys(LEARN.clicks.cat||{}).reduce(function(s,k){return s+(LEARN.clicks.cat[k]||0);},0);
+  let text;
+  if(!total){
+    text="点击学习：点开任意卡片，会按类别微调后续排序（仅存本地，不上传）";
+  }else{
+    const top=Object.entries(LEARN.clicks.cat).sort(function(a,b){return b[1]-a[1];}).slice(0,3)
+      .map(function(e){return (CAT_LABEL[e[0]]||e[0])+" "+e[1];}).join(" · ");
+    text="点击学习：已记录 "+total+" 次 · "+top+"（下次刷新生效）";
+  }
+  line.innerHTML='<span>'+text+'</span>'
+    +'<button id="learnToggle">'+(LEARN.on?"关闭学习":"开启学习")+'</button>'
+    +'<button id="learnReset">重置</button>';
+  document.getElementById("learnToggle").onclick=function(){
+    LEARN.on=!LEARN.on; saveLearn(); renderLearnLine(); renderAll();
+  };
+  document.getElementById("learnReset").onclick=function(){
+    LEARN={on:true,impr:{cat:{},tag:{}},clicks:{cat:{},tag:{}}};
+    SESSION_SEEN.clear(); saveLearn(); renderLearnLine(); renderAll(); showToast("已重置点击学习");
+  };
+}
 
 function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function truncate(s,n){s=(s||"").trim();return s.length<=n?s:s.slice(0,n-1)+"…";}
@@ -238,13 +297,17 @@ function enrich(it){
   const eco=ECO.some(k=>hasKw(text,k));
   const P=PROFILES[state.profile];
   let grp=null;
-  for(const g of P.groups){ if(DOMAINS[g].some(k=>hasKw(text,k))){grp=g;break;} }
+  // 论文直接计入「前沿理论」，不依赖标题关键词
+  if(P.groups.indexOf("theory")>=0 && it.category==="paper") grp="theory";
+  if(!grp){ for(const g of P.groups){ if(DOMAINS[g].some(k=>hasKw(text,k))){grp=g;break;} } }
   const sc=it.score||0, w=P.w;
   const raw=w.base*(sc/100)+(grp?w.domain:0)+(pol?w.policy:0)+(dom?w.domestic:0)+(eco?w.eco:0);
-  const rel=Math.round(Math.max(0,Math.min(1,raw))*100);
+  const rel0=Math.round(Math.max(0,Math.min(1,raw))*100);
   let insp=P.insp[grp];
   if(!insp) insp=pol?"政策 / 协议信号，可能影响选题方向与合规边界。":(eco?"开源 / 生态动向，影响后续工具链选型。":"可作为选题或技术选型的背景参考。");
-  return Object.assign({},it,{_dom:dom,_pol:pol,_eco:eco,_grp:grp,_rel:rel,_time:timeLabel(it),_insp:insp});
+  const out=Object.assign({},it,{_dom:dom,_pol:pol,_eco:eco,_grp:grp,_rel:rel0,_time:timeLabel(it),_insp:insp});
+  out._rel=Math.min(100, rel0 + learnBoost(out));
+  return out;
 }
 
 function dedupe(items){
@@ -338,7 +401,7 @@ function pickHref(it){
 }
 function cardHTML(idx,it){
   const href=pickHref(it);
-  return '<a class="card" id="c'+idx+'" href="'+escapeHtml(href)+'" target="_blank" rel="noopener noreferrer" data-dom="'+(it._dom?1:0)+'" data-pol="'+(it._pol?1:0)+'" data-rel="'+(it._grp?1:0)+'">'
+  return '<a class="card" id="c'+idx+'" href="'+escapeHtml(href)+'" target="_blank" rel="noopener noreferrer" data-dom="'+(it._dom?1:0)+'" data-pol="'+(it._pol?1:0)+'" data-rel="'+(it._grp?1:0)+'" data-cat="'+escapeHtml(it.category||"other")+'" data-tags="'+tagKeys(it).join(",")+'">'
     +'<div class="card-top"><span class="num">'+idx+'</span><span class="src-chip">'+escapeHtml((it.source&&it.source.name)||"")+'</span></div>'
     +'<div class="card-meta"><span class="time">'+escapeHtml(it._time)+"</span>"+tagHTML(it)+"</div>"
     +'<h3 class="card-title">'+escapeHtml(it.title||"")+"</h3>"
@@ -383,6 +446,14 @@ function renderAll(){
   let gi=0;
   shown.forEach(a=>a.forEach(it=>{gi++;it._idx=gi;}));
   const flat=shown.flat();
+  // 曝光计数：同一会话同一标题只记一次
+  flat.forEach(function(it){
+    if(SESSION_SEEN.has(it.title)) return;
+    SESSION_SEEN.add(it.title);
+    bump(LEARN.impr.cat,catKey(it),1);
+    tagKeys(it).forEach(function(t){bump(LEARN.impr.tag,t,1);});
+  });
+  saveLearn();
   const domN=flat.filter(x=>x._dom).length, polN=flat.filter(x=>x._pol).length, relN=flat.filter(x=>x._grp).length;
   document.getElementById("subTitle").textContent="过去 24 小时 · 共 "+flat.length+" 条（已去重）· 国内 "+domN+" 条";
   document.getElementById("stats").innerHTML=
@@ -417,6 +488,7 @@ function renderAll(){
     const b=document.getElementById("banner"); b.hidden=false;
     b.textContent="DEBUG dim="+document.documentElement.scrollWidth+"x"+document.documentElement.clientWidth+" "+JSON.stringify(flat.filter(x=>x._grp).map(x=>[x._grp,(x.title||"").slice(0,20)]));
   }
+  renderLearnLine();
   applyFilter();
   bindProfile();
 }
@@ -456,6 +528,18 @@ document.querySelectorAll(".filters button[data-f]").forEach(b=>{
 });
 document.getElementById("refreshBtn").onclick=loadData;
 window.addEventListener("resize",function(){clearTimeout(window.__rz);window.__rz=setTimeout(renderAll,150);});
+
+// 点击卡片：记录类别 / 标签点击，作为后续排序的轻量信号
+document.addEventListener("click",function(e){
+  const a=e.target.closest("a.card");
+  if(!a) return;
+  const cat=a.dataset.cat||"other";
+  const tags=(a.dataset.tags||"").split(",").filter(Boolean);
+  bump(LEARN.clicks.cat,cat,1);
+  tags.forEach(function(t){bump(LEARN.clicks.tag,t,1);});
+  saveLearn(); renderLearnLine();
+  showToast("已记录："+(CAT_LABEL[cat]||cat)+"，下次刷新生效");
+});
 
 loadData();
 </script>

@@ -30,7 +30,7 @@ WEEKDAY_CN = ["周一", "周二", "周三", "周四", "周五", "周六", "周�
 # ============ 可调画像配置 ============
 PROFILE = {
     # 权重合计 1.0；base=AIHOT 热度分，domain=AI4Science 硬相关，其余为增强项
-    "weights": {"base": 0.40, "domain": 0.30, "policy": 0.12, "domestic": 0.13, "eco": 0.05},
+    "weights": {"base": 0.25, "domain": 0.25, "policy": 0.20, "domestic": 0.20, "eco": 0.10},
     "caps": {"daily": 7, "weekly": 10},   # 每个版块最多展示条数
     "radar": {"daily": 5, "weekly": 8},
 }
@@ -77,23 +77,12 @@ ECO_KW = [
 ]
 # 硬相关：只收 AI4Science / 计算数学 / 芯片散热 / 并行 / 数学形式化
 DOMAIN = {
-    "thermal": ["热传导", "散热", "热管理", "温度场", "热仿真", "热设计", "封装散热", "液冷", "风冷", "均温板", "热阻",
-                "thermal", "cooling"],
-    "pde": ["偏微分方程", "有限元", "有限差分", "网格", "求解器", "数值", "仿真", "神经算子", "算子学习",
-            "代理模型", "降阶模型", "计算数学", "数值线性代数", "稀疏矩阵", "科学计算",
-            "pde", "scientific computing", "simulation", "solver", "mesh", "fem", "cfd",
-            "neural operator", "pinn", "fno", "deeponet", "surrogate", "finite element",
-            "finite difference", "numerical", "reduced order model"],
-    "parallel": ["并行", "高性能计算", "昇腾", "多卡", "万卡", "并行计算", "加速器", "加速比",
-                 "cuda", "triton", "hpc", "mpi", "openmp"],
-    "math": ["定理证明", "形式化验证", "数学证明", "自动证明", "机器验证", "形式化", "定理",
-             "群论", "数论", "组合数学", "拓扑", "lean", "coq", "isabelle"],
+    "theory": ["论文", "理论", "预训练", "后训练", "蒸馏", "rlhf", "dpo", "scaling law", "世界模型",
+               "可解释", "自监督", "对比学习", "表征学习", "检索增强", "rag", "transformer",
+               "diffusion", "moe", "稀疏", "幻觉", "推理模型"],
 }
 INSP = {
-    "thermal": "与芯片散热 / 热传导求解直接相关，留意其建模假设与验证口径。",
-    "pde": "方法类线索，可评估迁移到粗网格修正或 PDE 代理建模。",
-    "parallel": "并行 / 加速策略可对照你求解器的性能瓶颈。",
-    "math": "数学 / 形式化线索，可能启发课程选题或验证方法。",
+    "theory": "理论 / 方法线索，可跟踪其假设、评测方式与可复现性。",
 }
 
 
@@ -164,7 +153,7 @@ def bj_time(it):
 # ============ 画像打分 ============
 W = PROFILE["weights"]
 # 雷达按「灵感价值」加权：与课题直接相关的方法/数学类优先于泛基建
-RADAR_BONUS = {"thermal": 26, "math": 24, "pde": 22, "parallel": 12}
+RADAR_BONUS = {"theory": 15}
 
 
 def radar_score(it):
@@ -176,11 +165,8 @@ def enrich(it):
     dom = bool(DOM_CONTENT_RE.search(text))
     pol = any(has_kw(text, k) for k in POLICY_KW)
     eco = any(has_kw(text, k) for k in ECO_KW)
-    dgroup = None
-    for g in ("thermal", "pde", "math", "parallel"):
-        if any(has_kw(text, k) for k in DOMAIN[g]):
-            dgroup = g
-            break
+    dgroup = "theory" if (it.get("category") == "paper"
+                          or any(has_kw(text, k) for k in DOMAIN["theory"])) else None
     domain = dgroup is not None
     score = it.get("score") or 0
     raw = (W["base"] * (score / 100.0) + W["domain"] * domain
