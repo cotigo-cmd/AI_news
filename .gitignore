@@ -1,0 +1,11 @@
+# 本地生成物
+AI_News_晨报_*.html
+AI_News_周报_*.html
+__pycache__/
+*.pyc
+
+# WorkBuddy / 发布产物
+.workbuddy/
+app/
+submission/
+*.genie

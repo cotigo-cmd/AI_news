@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 晨报 · 实时个性化资讯雷达</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1f2937;line-height:1.6;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px 60px}
+.card,.stat,.r-body,.grid{min-width:0}
+.card-title,.card-sum,.r-title,.r-meta,.profileNote,.sub,.src-chip{overflow-wrap:anywhere;word-break:break-word}
+.hero{background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 55%,#6d28d9 100%);color:#fff;padding:34px 18px 28px;border-radius:0 0 22px 22px}
+.hero .inner{max-width:1100px;margin:0 auto}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.eyebrow{font-size:12px;letter-spacing:2.5px;opacity:.85;text-transform:uppercase}
+.live{font-size:12px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 10px}
+.live.off{background:rgba(251,191,36,.2);border-color:rgba(251,191,36,.5);color:#fde68a}
+.hero h1{font-size:29px;margin:8px 0 2px;font-weight:800}
+.hero .sub{opacity:.9;font-size:14px}
+.profiles{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.profiles button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:6px 13px;font-size:13px;cursor:pointer;transition:.15s}
+.profiles button:hover{background:rgba(255,255,255,.22)}
+.profiles button.on{background:#fff;color:#312e81;border-color:#fff;font-weight:700}
+.stat-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:8px 12px;font-size:12.5px}
+.stat b{font-size:19px;display:block}
+.profileNote{margin-top:11px;font-size:12px;opacity:.82}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e5e7eb;padding:9px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.nav .inner{max-width:1100px;margin:0 auto;padding:0 18px}
+.filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
+.filters button{border:1px solid #e5e7eb;background:#f8fafc;color:#374151;border-radius:999px;padding:4px 11px;font-size:12.5px;cursor:pointer}
+.filters button.on{background:#111827;color:#fff;border-color:#111827}
+.filters .spacer{flex:1}
+.filters .refresh{border-color:#c7d2fe;color:#4338ca;background:#eef2ff}
+.anchors{display:flex;gap:7px;flex-wrap:wrap}
+.nav-pill{--c:#333;text-decoration:none;color:#374151;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;font-size:12px;display:inline-flex;align-items:center;gap:5px}
+.nav-pill:hover{border-color:var(--c);color:var(--c)}
+.nav-pill b{background:var(--c);color:#fff;border-radius:999px;padding:0 6px;font-size:11px}
+.banner{margin-top:16px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:10px;padding:10px 14px;font-size:13px}
+.radar{margin-top:26px;background:#fff;border:1px solid #e8ecf3;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.radar-head{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;color:#111827}
+.radar-head .badge{font-size:11.5px;font-weight:600;color:#7c3aed;background:#f3e8ff;border-radius:999px;padding:2px 8px}
+.radar-desc{font-size:12.5px;color:#64748b;margin:3px 0 10px}
+.radar-row{display:flex;gap:13px;padding:11px 0;border-top:1px dashed #e8ecf3}
+.radar-row:first-child{border-top:0}
+.r-rank{font-size:21px;font-weight:800;color:#c7d2fe;min-width:32px}
+.r-body{flex:1;min-width:0}
+.r-title{font-size:15px;font-weight:700;color:#0f172a;text-decoration:none;display:block}
+.r-title:hover{color:#2563eb}
+.r-meta{font-size:12px;color:#64748b;margin:2px 0}
+.r-jump{color:#2563eb;text-decoration:none;margin-left:5px}
+.r-insp{font-size:12.5px;color:#7c3aed;background:#faf5ff;border-left:2px solid #c4b5fd;padding:4px 9px;border-radius:0 6px 6px 0;margin-top:4px}
+.section{margin-top:32px}
+.sec-head{display:flex;align-items:center;gap:9px;font-size:20px;color:#111827;padding-bottom:7px;border-bottom:2px solid var(--c);margin-bottom:15px}
+.sec-head .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.sec-count{margin-left:auto;background:var(--c);color:#fff;font-size:12.5px;border-radius:999px;padding:2px 9px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
+.card{background:#fff;border:1px solid #eceef1;border-radius:14px;padding:15px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.1);border-color:#cbd5e1}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.num{background:#111827;color:#fff;font-weight:700;font-size:12.5px;min-width:25px;height:25px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.src-chip{font-size:11.5px;color:#475569;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:2px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:78%}
+.card-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.time{font-size:11.5px;color:#94a3b8}
+.tag{font-size:11px;border-radius:999px;padding:1px 7px;border:1px solid transparent}
+.tag.dom{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.tag.ovs{background:#f1f5f9;color:#64748b;border-color:#e2e8f0}
+.tag.pol{background:#fef3c7;color:#b45309;border-color:#fde68a}
+.tag.eco{background:#e0f2fe;color:#0369a1;border-color:#bae6fd}
+.tag.rel{background:#ede9fe;color:#6d28d9;border-color:#ddd6fe}
+.tag.muted{background:#f8fafc;color:#94a3b8;border-color:#eef2f7}
+.tag.score{background:#111827;color:#fff}
+.card-title{font-size:15.5px;font-weight:700;line-height:1.45;color:#0f172a}
+.card-sum{font-size:13.5px;color:#475569;flex:1}
+.card-link{font-size:12.5px;color:#2563eb;font-weight:600}
+.empty{grid-column:1/-1;text-align:center;color:#94a3b8;padding:26px;border:1px dashed #d8dee6;border-radius:12px;background:#fafbfc}
+.skeleton{height:120px;border-radius:14px;background:linear-gradient(90deg,#eef2f7 25%,#f8fafc 37%,#eef2f7 63%);background-size:400% 100%;animation:sk 1.2s infinite}
+@keyframes sk{0%{background-position:100% 0}100%{background-position:0 0}}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12.5px;color:#64748b;text-align:center}
+footer a{color:#2563eb;text-decoration:none}
+@media(max-width:520px){
+  .hero h1{font-size:22px}
+  .grid{grid-template-columns:1fr}
+  .r-rank{min-width:25px;font-size:17px}
+  .hero{padding:28px 14px 24px}
+  .wrap{padding:0 12px 50px}
+  .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .stat{padding:7px 10px;font-size:11.5px}
+  .stat b{font-size:17px}
+  .sec-line{display:none}
+  .sec-stat{display:none}
+  .filters{gap:6px}
+  .filters button{padding:4px 9px;font-size:12px}
+  .filters .spacer{display:none}
+  .anchors{gap:6px}
+  .nav-pill{padding:4px 9px;font-size:11.5px}
+  .profiles{gap:6px}
+  .profiles button{padding:5px 10px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<header class="hero"><div class="inner">
+  <div class="topline">
+    <span class="eyebrow">AI HOT · 实时晨报</span>
+    <span id="liveBadge" class="live">实时拉取</span>
+  </div>
+  <h1 id="dateTitle">正在加载…</h1>
+  <div class="sub" id="subTitle">连接 AI HOT 公开接口</div>
+  <div class="profiles" id="profiles"></div>
+  <div class="stat-row" id="stats"></div>
+  <div class="profileNote" id="profileNote"></div>
+</div></header>
+
+<nav class="nav"><div class="inner">
+  <div class="filters">
+    <button data-f="all" class="on">全部</button>
+    <button data-f="dom">国内</button>
+    <button data-f="pol">政策/协议</button>
+    <button data-f="rel">★ 相关</button>
+    <span class="spacer"></span>
+    <button class="refresh" id="refreshBtn">刷新</button>
+  </div>
+  <div class="anchors" id="anchors"></div>
+</div></nav>
+
+<main class="wrap">
+  <div id="banner" class="banner" hidden></div>
+  <section id="radar" class="radar">
+    <div class="radar-head">灵感雷达 <span class="badge">按当前画像加权</span></div>
+    <div class="radar-desc" id="radarDesc">从本期条目中挑出与当前画像最相关、最可能触发灵感的条目，附规则化「可借鉴」提示。</div>
+    <div id="radarList"></div>
+  </section>
+  <div id="sections"></div>
+  <footer>
+    <p>数据源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a> 公开接口 · 标题与摘要版权归原作者</p>
+    <p>排序为本地画像加权结果，不代表 AI HOT 官方排序；引用数字/政策请以原文为准</p>
+  </footer>
+</main>
+
+<script>
+const FALLBACK = /*__FALLBACK__*/{"ts":"","items":[]};
+const API = "https://aihot.virxact.com/api/v1";
+const SECTIONS = [["模型发布/更新","#2563eb"],["产品发布/更新","#7c3aed"],["行业动态","#0d9488"],["论文研究","#d97706"],["技巧与观点","#db2777"]];
+const CAT2SEC = {"ai-models":0,"ai-products":1,"industry":2,"paper":3,"tip":4,"opinion":4};
+const WEEK = ["周日","周一","周二","周三","周四","周五","周六"];
+
+const DOM_RE = /IT之家|公众号|微信|微博|B站|bilibili|机器之心|量子位|新智元|36氪|虎嗅|爱范儿|InfoQ|CSDN|掘金|开源中国|Gitee|博客园|知乎|澎湃|财新|第一财经|界面|钛媒体|雷峰网|阿里|腾讯|Tencent|百度|Baidu|字节|ByteDance|华为|Huawei|小米|Xiaomi|美团|京东|网易|快手|商汤|旷视|云从|依图|科大讯飞|讯飞|智谱|月之暗面|Moonshot|Kimi|DeepSeek|深度求索|MiniMax|阶跃|零一万物|百川|面壁|OpenBMB|智元|AGIBOT|宇树|Unitree|优必选|寒武纪|摩尔线程|壁仞|燧原|天数智芯|沐曦|海光|飞腾|龙芯|中科曙光|浪潮|中兴|新华三|中国移动|中国电信|中国联通|国家电网|通义|千问|Qwen|豆包|文心|混元|盘古|昇腾|中科院|清华|北大|之江|智源|BAAI|魔搭|ModelScope|火山引擎|阿里云|腾讯云|华为云|百度智能云|小红书|蚂蚁|生数|Vidu|上海AI|上海人工智能|昆仑万维|天工/i;
+
+const POLICY = ["政策","监管","法规","立法","备案","标准","白皮书","指导意见","管理办法","合规","许可证","开源协议","license","协议","mcp","a2a","agent protocol","互联互通","互操作","数据要素","算力","智算","信通院","工信部","网信办","科技部","发改委","国务院","欧盟","eu ai act","ai act","版权","著作权","隐私","数据安全","出口管制","制裁","反垄断"];
+const ECO = ["开源","社区","生态","开发者","插件","工具链","sdk","api","开放平台","共建","联盟","基金会","github","hugging face","modelscope","魔搭","gitee","贡献者","maintainer","release","版本发布"];
+
+const DOMAINS = {
+  thermal: ["热传导","散热","热管理","温度场","热仿真","热设计","封装散热","液冷","风冷","均温板","热阻","thermal","cooling"],
+  pde: ["偏微分方程","有限元","有限差分","网格","求解器","数值","仿真","神经算子","算子学习","代理模型","降阶模型","计算数学","数值线性代数","稀疏矩阵","科学计算","pde","scientific computing","simulation","solver","mesh","fem","cfd","neural operator","pinn","fno","deeponet","surrogate","finite element","finite difference","numerical","reduced order model"],
+  parallel: ["并行","高性能计算","昇腾","多卡","万卡","并行计算","加速器","加速比","cuda","triton","hpc","mpi","openmp"],
+  math: ["定理证明","形式化验证","数学证明","自动证明","机器验证","形式化","定理","群论","数论","组合数学","拓扑","lean","coq","isabelle"],
+  dev: ["mcp","a2a","sdk","cli","ide","github","langchain","vllm","sglang","插件","工具链","微调","部署","workflow","工作流"],
+  business: ["融资","估值","营收","毛利","ipo","上市","定价","订阅","商业化","客户","市场","份额","收购","财报","revenue","funding","valuation"]
+};
+
+const PROFILES = {
+  research: {label:"科研 / AI4Science", groups:["thermal","pde","math","parallel"],
+    w:{base:.40,domain:.30,policy:.12,domestic:.13,eco:.05},
+    bonus:{thermal:26,math:24,pde:22,parallel:12},
+    insp:{thermal:"与芯片散热 / 热传导求解直接相关，留意其建模假设与验证口径。",pde:"方法类线索，可评估迁移到粗网格修正或 PDE 代理建模。",parallel:"并行 / 加速策略可对照你求解器的性能瓶颈。",math:"数学 / 形式化线索，可能启发课程选题或验证方法。"}},
+  dev: {label:"开发者", groups:["dev"],
+    w:{base:.40,domain:.30,policy:.10,domestic:.12,eco:.08},
+    bonus:{dev:20},
+    insp:{dev:"工具链 / 协议动向，可评估接入你的工作流或替换现有组件的成本。"}},
+  business: {label:"产品 / 商业", groups:["business"],
+    w:{base:.45,domain:.25,policy:.15,domestic:.10,eco:.05},
+    bonus:{business:18},
+    insp:{business:"可留意其商业模式、定价与落地场景，判断是否有可复用的切口。"}},
+  general: {label:"通用", groups:[],
+    w:{base:.55,domain:.10,policy:.15,domestic:.20,eco:.00},
+    bonus:{},
+    insp:{}}
+};
+
+let state = {items:[], profile:"research", filter:"all", live:true, loadedAt:null, ts:""};
+(function(){
+  const qp=new URLSearchParams(location.search);
+  const p=qp.get("profile"); if(p&&PROFILES[p]) state.profile=p;
+  const f=qp.get("filter"); if(["all","dom","pol","rel"].includes(f)) state.filter=f;
+})();
+
+function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function truncate(s,n){s=(s||"").trim();return s.length<=n?s:s.slice(0,n-1)+"…";}
+function norm(s){return (s||"").toLowerCase().replace(/[^\w\u4e00-\u9fff]+/g,"");}
+function hasKw(t,k){
+  if(/[a-z0-9]/.test(k)){
+    const escK=k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+    return new RegExp("(?<![a-z0-9])"+escK+"(?![a-z0-9])","i").test(t);
+  }
+  return t.includes(k);
+}
+function bjParts(iso){
+  const d=new Date(iso); if(!iso||isNaN(d)) return null;
+  const b=new Date(d.getTime()+8*3600*1000);
+  return {y:b.getUTCFullYear(),m:b.getUTCMonth()+1,d:b.getUTCDate(),hh:String(b.getUTCHours()).padStart(2,"0"),mm:String(b.getUTCMinutes()).padStart(2,"0")};
+}
+function bjNow(){const b=new Date(Date.now()+8*3600*1000);return {y:b.getUTCFullYear(),m:b.getUTCMonth()+1,d:b.getUTCDate()};}
+function timeLabel(it){
+  const p=bjParts(it.publishedAt||it.discoveredAt); if(!p) return "";
+  const n=bjNow();
+  if(p.y===n.y&&p.m===n.m&&p.d===n.d) return "今天 "+p.hh+":"+p.mm;
+  const yb=new Date(Date.now()+8*3600*1000-86400000);
+  if(p.y===yb.getUTCFullYear()&&p.m===yb.getUTCMonth()+1&&p.d===yb.getUTCDate()) return "昨天 "+p.hh+":"+p.mm;
+  return p.m+" 月 "+p.d+" 日 "+p.hh+":"+p.mm;
+}
+function bigrams(s){
+  const t=norm(s), set=new Set();
+  for(let i=0;i<t.length-1;i++) set.add(t.slice(i,i+2));
+  return set;
+}
+function sim(a,b){
+  const A=bigrams(a),B=bigrams(b);
+  if(!A.size||!B.size) return 0;
+  let n=0; for(const x of A) if(B.has(x)) n++;
+  return n/Math.min(A.size,B.size); // 重叠系数：对中文改写/长短不一更稳
+}
+function hasSharedName(a,b){
+  const re=/[A-Za-z][A-Za-z0-9.\-]{3,}/g;
+  const A=new Set((a.match(re)||[]).map(x=>x.toLowerCase()));
+  const B=new Set((b.match(re)||[]).map(x=>x.toLowerCase()));
+  const stop=new Set(["openai","google","anthropic","microsoft","deepmind","model","models","release","update","launch","agent","agents","artificial","analysis","research","report"]);
+  return [...A].some(x=>B.has(x)&&!stop.has(x));
+}
+function vkeys(t){return new Set((t.match(/[A-Za-z][A-Za-z0-9.\-]{1,}\s?\d+(?:\.\d+)?/g)||[]).map(x=>x.toLowerCase().replace(/\s/g,"")));}
+
+function enrich(it){
+  const text=((it.title||"")+" "+(it.summary||"")).toLowerCase();
+  const src=(it.source&&it.source.name)||"";
+  const dom=DOM_RE.test(src)||DOM_RE.test(it.title||"");
+  const pol=POLICY.some(k=>hasKw(text,k));
+  const eco=ECO.some(k=>hasKw(text,k));
+  const P=PROFILES[state.profile];
+  let grp=null;
+  for(const g of P.groups){ if(DOMAINS[g].some(k=>hasKw(text,k))){grp=g;break;} }
+  const sc=it.score||0, w=P.w;
+  const raw=w.base*(sc/100)+(grp?w.domain:0)+(pol?w.policy:0)+(dom?w.domestic:0)+(eco?w.eco:0);
+  const rel=Math.round(Math.max(0,Math.min(1,raw))*100);
+  let insp=P.insp[grp];
+  if(!insp) insp=pol?"政策 / 协议信号，可能影响选题方向与合规边界。":(eco?"开源 / 生态动向，影响后续工具链选型。":"可作为选题或技术选型的背景参考。");
+  return Object.assign({},it,{_dom:dom,_pol:pol,_eco:eco,_grp:grp,_rel:rel,_time:timeLabel(it),_insp:insp});
+}
+
+function dedupe(items){
+  const sorted=items.slice().sort((a,b)=>b._rel-a._rel||(b.score||0)-(a.score||0));
+  const kept=[];
+  for(const it of sorted){
+    const t=norm(it.title), vk=vkeys(it.title||"");
+    let dup=false;
+    for(const k of kept){
+      const o=sim(t,norm(k.title));
+      if(t===norm(k.title)){dup=true;break;}
+      if(o>0.72){dup=true;break;}
+      if(o>0.55&&hasSharedName(it.title||"",k.title||"")){dup=true;break;}
+      if(it.category===k.category&&vk.size&&[...vk].some(x=>vkeys(k.title||"").has(x))){dup=true;break;}
+    }
+    if(!dup) kept.push(it);
+  }
+  return kept;
+}
+function capEvent(items,limit){
+  const cnt={},out=[];
+  for(const it of items){
+    const ks=vkeys(it.title||""), key=ks.size?[...ks].sort()[0]:null;
+    if(key===null){out.push(it);continue;}
+    if((cnt[key]||0)<limit){cnt[key]=(cnt[key]||0)+1;out.push(it);}
+  }
+  return out;
+}
+
+function fetchPage(window_,cursor){
+  let url=API+"/items?mode=all&window="+window_+"&limit=100";
+  if(cursor) url+="&cursor="+encodeURIComponent(cursor);
+  return fetch(url).then(r=>{if(!r.ok) throw new Error("HTTP "+r.status);return r.json();});
+}
+async function loadData(){
+  setLoading();
+  if(location.search.includes("snapshot=1")){
+    state.items=(FALLBACK&&FALLBACK.items)||[]; state.live=false; state.ts=(FALLBACK&&FALLBACK.ts)||"";
+    renderAll(); return;
+  }
+  try{
+    let all=[], cursor=null;
+    for(let p=0;p<2;p++){
+      const d=await fetchPage("24h",cursor);
+      all=all.concat(d.items||[]);
+      const pg=d.page||{};
+      if(!pg.hasMore||!pg.nextCursor) break;
+      cursor=pg.nextCursor;
+    }
+    if(!all.length) throw new Error("empty");
+    state.items=all; state.live=true; state.loadedAt=new Date(); state.ts="";
+    renderAll();
+  }catch(e){
+    state.live=false;
+    state.items=(FALLBACK&&FALLBACK.items)||[];
+    state.ts=(FALLBACK&&FALLBACK.ts)||"";
+    renderAll();
+    const b=document.getElementById("banner");
+    b.hidden=false;
+    b.textContent="实时接口暂不可用，当前展示内置快照"+(state.ts?"（生成于 "+state.ts+"）":"")+"。可点右上角「刷新数据」重试。";
+  }
+}
+
+function setLoading(){
+  document.getElementById("dateTitle").textContent="正在拉取今日资讯…";
+  document.getElementById("subTitle").textContent="连接 AI HOT 公开接口";
+  document.getElementById("stats").innerHTML="";
+  document.getElementById("radarList").innerHTML='<div class="radar-row"><div class="r-body"><div class="skeleton"></div></div></div>';
+  document.getElementById("sections").innerHTML='<div class="section"><div class="grid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>';
+  document.getElementById("anchors").innerHTML="";
+}
+
+function tagHTML(it){
+  let t='<span class="tag '+(it._dom?"dom":"ovs")+'">'+(it._dom?"国内":"海外")+"</span>";
+  if(it._pol) t+='<span class="tag pol">政策/协议</span>';
+  if(it._eco) t+='<span class="tag eco">开源/生态</span>';
+  if(it._grp) t+='<span class="tag rel">★ 画像相关</span>';
+  if(it.selected===false) t+='<span class="tag muted">未入精选</span>';
+  t+='<span class="tag score">相关 '+it._rel+"</span>";
+  return t;
+}
+function cardHTML(idx,it){
+  const href=(it.links&&(it.links.original||it.links.aihot))||"#";
+  return '<a class="card" id="c'+idx+'" href="'+escapeHtml(href)+'" target="_blank" rel="noopener noreferrer" data-dom="'+(it._dom?1:0)+'" data-pol="'+(it._pol?1:0)+'" data-rel="'+(it._grp?1:0)+'">'
+    +'<div class="card-top"><span class="num">'+idx+'</span><span class="src-chip">'+escapeHtml((it.source&&it.source.name)||"")+'</span></div>'
+    +'<div class="card-meta"><span class="time">'+escapeHtml(it._time)+"</span>"+tagHTML(it)+"</div>"
+    +'<h3 class="card-title">'+escapeHtml(it.title||"")+"</h3>"
+    +'<p class="card-sum">'+escapeHtml(truncate(it.summary||"",60))+"</p>"
+    +'<span class="card-link">阅读原文 &rarr;</span></a>';
+}
+function radarHTML(rows){
+  return rows.map((it,n)=>{
+    const href=(it.links&&(it.links.original||it.links.aihot))||"#";
+    return '<div class="radar-row" data-dom="'+(it._dom?1:0)+'" data-pol="'+(it._pol?1:0)+'" data-rel="'+(it._grp?1:0)+'">'
+      +'<div class="r-rank">'+String(n+1).padStart(2,"0")+"</div>"
+      +'<div class="r-body"><a class="r-title" href="'+escapeHtml(href)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(it.title||"")+"</a>"
+      +'<div class="r-meta">'+escapeHtml((it.source&&it.source.name)||"")+" · "+escapeHtml(it._time)+" · 相关 "+it._rel
+      +' <a class="r-jump" href="#c'+it._idx+'">第 '+it._idx+" 条</a></div>"
+      +'<div class="r-insp">可借鉴：'+escapeHtml(it._insp)+"</div></div></div>";
+  }).join("");
+}
+
+function renderAll(){
+  const P=PROFILES[state.profile], now=bjNow();
+  document.getElementById("dateTitle").textContent=now.y+" 年 "+now.m+" 月 "+now.d+" 日 "+WEEK[new Date(Date.UTC(now.y,now.m-1,now.d)).getUTCDay()];
+  const badge=document.getElementById("liveBadge");
+  badge.textContent=state.live?"实时拉取":"内置快照";
+  badge.className="live"+(state.live?"":" off");
+  document.getElementById("profileNote").textContent="当前画像："+P.label+" · 权重 领域相关性 "+Math.round(P.w.domain*100)+"% / 热度 "+Math.round(P.w.base*100)+"% / 政策 "+Math.round(P.w.policy*100)+"% / 国内 "+Math.round(P.w.domestic*100)+"%";
+  if(state.live) document.getElementById("banner").hidden=true;
+
+  // 画像按钮
+  document.getElementById("profiles").innerHTML=Object.keys(PROFILES).map(k=>'<button data-p="'+k+'" class="'+(k===state.profile?"on":"")+'">'+PROFILES[k].label+"</button>").join("");
+  document.querySelectorAll(".filters button[data-f]").forEach(b=>b.classList.toggle("on", b.dataset.f===state.filter));
+
+  const enriched=dedupe(state.items.map(enrich));
+  const pool=capEvent(enriched,2);
+  const secs=SECTIONS.map(()=>[]);
+  for(const it of pool){
+    const idx=(it.category in CAT2SEC)?CAT2SEC[it.category]:4;
+    secs[idx].push(it);
+  }
+  secs.forEach(a=>a.sort((x,y)=>y._rel-x._rel));
+  const cap=7;
+  const shown=secs.map(a=>a.slice(0,cap));
+
+  let gi=0;
+  shown.forEach(a=>a.forEach(it=>{gi++;it._idx=gi;}));
+  const flat=shown.flat();
+  const domN=flat.filter(x=>x._dom).length, polN=flat.filter(x=>x._pol).length, relN=flat.filter(x=>x._grp).length;
+  document.getElementById("subTitle").textContent="过去 24 小时 · 共 "+flat.length+" 条（已去重）· 国内 "+domN+" 条";
+  document.getElementById("stats").innerHTML=
+    '<div class="stat">总条数<b>'+flat.length+'</b></div>'+
+    '<div class="stat">国内<b>'+domN+'</b></div>'+
+    '<div class="stat">政策/协议<b>'+polN+'</b></div>'+
+    '<div class="stat">★ 画像相关<b>'+relN+'</b></div>'+
+    SECTIONS.map((s,i)=>'<div class="stat sec-stat">'+s[0].replace("发布/更新","")+'<b>'+shown[i].length+'</b></div>').join("");
+
+  // 导航（窄屏用短标签，避免顶到右边缘）
+  const narrow=window.matchMedia("(max-width:520px)").matches;
+  const shortName=n=>n.replace("发布/更新","").replace("动态","").replace("研究","").replace("与观点","");
+  let nav='<a class="nav-pill" href="#radar" style="--c:#7c3aed">'+(narrow?"雷达":"灵感雷达")+'<b>5</b></a>';
+  SECTIONS.forEach((s,i)=>{
+    const lb=narrow?shortName(s[0]):s[0];
+    nav+='<a class="nav-pill" href="#sec-'+i+'" style="--c:'+s[1]+'">'+lb+'<b>'+shown[i].length+"</b></a>";
+  });
+  document.getElementById("anchors").innerHTML=nav;
+
+  // 雷达
+  const radar=flat.slice().sort((a,b)=>(b._rel+(P.bonus[b._grp]||0))-(a._rel+(P.bonus[a._grp]||0))).slice(0,5);
+  document.getElementById("radarList").innerHTML=radar.length?radarHTML(radar):'<div class="empty">暂无可用条目</div>';
+  document.getElementById("radarDesc").textContent="从本期 "+flat.length+" 条中挑出与「"+P.label+"」最相关、最可能触发灵感的 "+radar.length+" 条，附规则化「可借鉴」提示。";
+
+  // 版块
+  document.getElementById("sections").innerHTML=SECTIONS.map((s,i)=>{
+    const body=shown[i].length?shown[i].map(it=>cardHTML(it._idx,it)).join(""):'<div class="empty">本期暂无该版块条目</div>';
+    return '<section id="sec-'+i+'" class="section"><h2 class="sec-head" style="--c:'+s[1]+'"><span class="dot" style="background:'+s[1]+'"></span>'+s[0]+'<span class="sec-count">'+shown[i].length+'</span></h2><div class="grid">'+body+"</div></section>";
+  }).join("");
+
+  if(location.search.includes("debug=1")){
+    const b=document.getElementById("banner"); b.hidden=false;
+    b.textContent="DEBUG dim="+document.documentElement.scrollWidth+"x"+document.documentElement.clientWidth+" "+JSON.stringify(flat.filter(x=>x._grp).map(x=>[x._grp,(x.title||"").slice(0,20)]));
+  }
+  applyFilter();
+  bindProfile();
+}
+
+function applyFilter(){
+  const f=state.filter;
+  document.querySelectorAll(".card,.radar-row").forEach(c=>{
+    let ok=true;
+    if(f==="dom") ok=c.dataset.dom==="1";
+    if(f==="pol") ok=c.dataset.pol==="1";
+    if(f==="rel") ok=c.dataset.rel==="1";
+    c.style.display=ok?"":"none";
+  });
+  document.querySelectorAll(".section").forEach(s=>{
+    const any=[...s.querySelectorAll(".card")].some(c=>c.style.display!=="none");
+    s.style.display=any?"":"none";
+  });
+  const rd=document.querySelector(".radar");
+  if(rd){
+    const any=[...rd.querySelectorAll(".radar-row")].some(c=>c.style.display!=="none");
+    rd.style.display=any?"":"none";
+  }
+}
+function bindProfile(){
+  document.querySelectorAll("#profiles button").forEach(b=>{
+    b.onclick=()=>{state.profile=b.dataset.p;renderAll();};
+  });
+}
+
+document.querySelectorAll(".filters button[data-f]").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll(".filters button[data-f]").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    state.filter=b.dataset.f;
+    applyFilter();
+  };
+});
+document.getElementById("refreshBtn").onclick=loadData;
+window.addEventListener("resize",function(){clearTimeout(window.__rz);window.__rz=setTimeout(renderAll,150);});
+
+loadData();
+</script>
+</body>
+</html>
