@@ -30,6 +30,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .learn-line button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:2px 9px;font-size:11.5px;cursor:pointer}
 .toast{position:fixed;right:16px;bottom:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{opacity:1;transform:none}
+.card{border-top:3px solid var(--c,transparent)}
+.card:focus-visible{outline:2px solid #4338ca;outline-offset:2px}
+html{scroll-behavior:smooth}
+.drawer{position:fixed;inset:0;z-index:60}
+.drawer[hidden]{display:none}
+.drawer-mask{position:absolute;inset:0;background:rgba(15,23,42,.45)}
+.drawer-panel{position:absolute;right:0;top:0;height:100%;width:min(540px,94vw);background:#fff;box-shadow:-16px 0 48px rgba(0,0,0,.25);padding:26px 24px 32px;overflow:auto;transform:translateX(100%);transition:transform .22s ease}
+.drawer.open .drawer-panel{transform:none}
+.drawer-close{position:absolute;right:14px;top:12px;width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-size:20px;line-height:1;cursor:pointer;color:#475569}
+.d-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.d-title{font-size:22px;line-height:1.4;font-weight:800;color:#0f172a;margin:4px 0 8px}
+.d-meta{font-size:12.5px;color:#64748b;margin-bottom:14px}
+.d-sum{font-size:15px;color:#334155;line-height:1.75;margin-bottom:16px}
+.d-insp{background:#faf5ff;border-left:3px solid #c4b5fd;color:#6d28d9;font-size:13.5px;padding:9px 12px;border-radius:0 8px 8px 0;margin-bottom:18px}
+.d-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.d-btn{display:inline-flex;align-items:center;gap:6px;border-radius:9px;padding:8px 14px;font-size:13.5px;font-weight:700;text-decoration:none;border:1px solid #e5e7eb;background:#f8fafc;color:#374151;cursor:pointer}
+.d-btn.primary{background:#111827;color:#fff;border-color:#111827}
+.d-btn.primary:hover{background:#312e81}
+.d-btn:hover{border-color:#cbd5e1}
+.d-related h4{font-size:13px;color:#64748b;margin-bottom:8px;font-weight:600}
+.d-rel-item{display:block;padding:8px 0;border-top:1px dashed #e8ecf3;text-decoration:none;color:#0f172a;font-size:14px}
+.d-rel-item:hover{color:#2563eb}
+.d-rel-item span{display:block;font-size:11.5px;color:#94a3b8;margin-top:2px}
+@media(max-width:520px){.drawer-panel{width:100%;padding:20px 16px 28px}.d-title{font-size:19px}}
 .nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e5e7eb;padding:9px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .nav .inner{max-width:1100px;margin:0 auto;padding:0 18px}
 .filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
@@ -112,6 +136,7 @@ footer a{color:#2563eb;text-decoration:none}
   </div>
   <h1 id="dateTitle">正在加载…</h1>
   <div class="sub" id="subTitle">连接 AI HOT 公开接口</div>
+  <div class="sub" style="opacity:.8;font-size:12.5px;margin-top:2px">AIHOT 负责采集与编辑 · 本页按你的方向重排、去重、给灵感</div>
   <div class="profiles" id="profiles"></div>
   <div class="stat-row" id="stats"></div>
   <div class="profileNote" id="profileNote"></div>
@@ -124,6 +149,7 @@ footer a{color:#2563eb;text-decoration:none}
     <button data-f="dom">国内</button>
     <button data-f="pol">政策/协议</button>
     <button data-f="rel">★ 相关</button>
+    <button data-f="saved">稍后读</button>
     <span class="spacer"></span>
     <button class="refresh" id="refreshBtn">刷新</button>
   </div>
@@ -141,9 +167,17 @@ footer a{color:#2563eb;text-decoration:none}
   <footer>
     <p>数据源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a> 公开接口 · 标题与摘要版权归原作者</p>
     <p>排序为本地画像加权结果，不代表 AI HOT 官方排序；引用数字/政策请以原文为准</p>
+    <p>原始资讯来自 AIHOT；个性化排序、去重与灵感提示由本页生成。</p>
   </footer>
 </main>
 <div id="toast" class="toast"></div>
+<div id="drawer" class="drawer" hidden>
+  <div class="drawer-mask" id="drawerMask"></div>
+  <aside class="drawer-panel" role="dialog" aria-modal="true" aria-label="资讯详情">
+    <button class="drawer-close" id="drawerClose" aria-label="关闭">×</button>
+    <div id="drawerBody"></div>
+  </aside>
+</div>
 
 <script>
 const FALLBACK = /*__FALLBACK__*/{"ts":"","items":[]};
@@ -190,7 +224,7 @@ let state = {items:[], profile:"research", filter:"all", live:true, loadedAt:nul
 (function(){
   const qp=new URLSearchParams(location.search);
   const p=qp.get("profile"); if(p&&PROFILES[p]) state.profile=p;
-  const f=qp.get("filter"); if(["all","dom","pol","rel"].includes(f)) state.filter=f;
+  const f=qp.get("filter"); if(["all","dom","pol","rel","saved"].includes(f)) state.filter=f;
 })();
 
 // ===== 点击学习：按类别 / 标签的平滑 CTR 给后续排序加权，本地存储 =====
@@ -245,6 +279,13 @@ function renderLearnLine(){
     SESSION_SEEN.clear(); saveLearn(); renderLearnLine(); renderAll(); showToast("已重置点击学习");
   };
 }
+
+// ===== 稍后读（本地） =====
+const SAVED_KEY="ai_news_saved_v1";
+let SAVED=new Set(loadSaved());
+function loadSaved(){try{const a=JSON.parse(localStorage.getItem(SAVED_KEY));return Array.isArray(a)?a:[];}catch(e){return[];}}
+function saveSaved(){try{localStorage.setItem(SAVED_KEY,JSON.stringify([...SAVED]));}catch(e){}}
+function isBlockedUrl(u){try{const host=new URL(u).hostname.replace(/^www\./,"");return BLOCKED_HOST.test(host);}catch(e){return false;}}
 
 function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function truncate(s,n){s=(s||"").trim();return s.length<=n?s:s.slice(0,n-1)+"…";}
@@ -386,6 +427,7 @@ function tagHTML(it){
   if(it._eco) t+='<span class="tag eco">开源/生态</span>';
   if(it._grp) t+='<span class="tag rel">★ 画像相关</span>';
   if(it.selected===false) t+='<span class="tag muted">未入精选</span>';
+  if(typeof SAVED!=="undefined" && SAVED.has(it.title)) t+='<span class="tag muted">稍后读</span>';
   t+='<span class="tag score">相关 '+it._rel+"</span>";
   return t;
 }
@@ -399,14 +441,14 @@ function pickHref(it){
   }catch(e){}
   return orig || l.aihot || "#";
 }
+function secColor(it){const i=(it.category in CAT2SEC)?CAT2SEC[it.category]:4;return SECTIONS[i][1];}
 function cardHTML(idx,it){
-  const href=pickHref(it);
-  return '<a class="card" id="c'+idx+'" href="'+escapeHtml(href)+'" target="_blank" rel="noopener noreferrer" data-dom="'+(it._dom?1:0)+'" data-pol="'+(it._pol?1:0)+'" data-rel="'+(it._grp?1:0)+'" data-cat="'+escapeHtml(it.category||"other")+'" data-tags="'+tagKeys(it).join(",")+'">'
+  return '<article class="card" id="c'+idx+'" data-idx="'+idx+'" data-title="'+escapeHtml(it.title||"")+'" data-dom="'+(it._dom?1:0)+'" data-pol="'+(it._pol?1:0)+'" data-rel="'+(it._grp?1:0)+'" data-cat="'+escapeHtml(it.category||"other")+'" data-tags="'+tagKeys(it).join(",")+'" tabindex="0" role="button" style="--c:'+secColor(it)+'">'
     +'<div class="card-top"><span class="num">'+idx+'</span><span class="src-chip">'+escapeHtml((it.source&&it.source.name)||"")+'</span></div>'
     +'<div class="card-meta"><span class="time">'+escapeHtml(it._time)+"</span>"+tagHTML(it)+"</div>"
     +'<h3 class="card-title">'+escapeHtml(it.title||"")+"</h3>"
     +'<p class="card-sum">'+escapeHtml(truncate(it.summary||"",60))+"</p>"
-    +'<span class="card-link">查看详情 &rarr;</span></a>';
+    +'<span class="card-link">查看详情 &rarr;</span></article>';
 }
 function radarHTML(rows){
   return rows.map((it,n)=>{
@@ -419,6 +461,61 @@ function radarHTML(rows){
   }).join("");
 }
 
+function relScore(a,b){
+  let s=0;
+  if(a.category===b.category) s+=1;
+  if(a._grp&&a._grp===b._grp) s+=2;
+  if(a._dom&&b._dom) s+=1;
+  if(a._pol&&b._pol) s+=1;
+  return s;
+}
+function openDrawer(idx){
+  const it=state.byIdx&&state.byIdx[idx]; if(!it) return;
+  const l=it.links||{}, orig=l.original||"", aihot=l.aihot||"";
+  const origOk=orig&&!isBlockedUrl(orig);
+  const related=(state.view||[]).filter(function(x){return x._idx!==idx&&relScore(it,x)>0;})
+    .sort(function(a,b){return relScore(it,b)-relScore(it,a);}).slice(0,4);
+  const saved=SAVED.has(it.title);
+  const relHtml=related.length?'<div class="d-related"><h4>同主题还有</h4>'+related.map(function(x){
+    return '<a class="d-rel-item" href="#c'+x._idx+'" data-jump="'+x._idx+'">'+escapeHtml(x.title||"")
+      +'<span>'+escapeHtml((x.source&&x.source.name)||"")+' · 相关 '+x._rel+'</span></a>';
+  }).join("")+'</div>':"";
+  document.getElementById("drawerBody").innerHTML=
+    '<div class="d-tags">'+tagHTML(it)+'</div>'
+    +'<h2 class="d-title">'+escapeHtml(it.title||"")+'</h2>'
+    +'<div class="d-meta">'+escapeHtml((it.source&&it.source.name)||"")+' · '+escapeHtml(it._time)+' · 相关 '+it._rel+'</div>'
+    +'<p class="d-sum">'+escapeHtml(it.summary||"")+'</p>'
+    +'<div class="d-insp">可借鉴：'+escapeHtml(it._insp)+'</div>'
+    +'<div class="d-actions">'
+      +(origOk?'<a class="d-btn primary" href="'+escapeHtml(orig)+'" target="_blank" rel="noopener noreferrer">阅读原文</a>':"")
+      +(aihot?'<a class="d-btn" href="'+escapeHtml(aihot)+'" target="_blank" rel="noopener noreferrer">在 AIHOT 查看</a>':"")
+      +'<button class="d-btn" id="dSave">'+(saved?"已加入稍后读":"稍后读")+'</button>'
+    +'</div>'+relHtml;
+  const d=document.getElementById("drawer");
+  d.hidden=false;
+  requestAnimationFrame(function(){d.classList.add("open");});
+  document.body.style.overflow="hidden";
+  document.getElementById("drawerClose").onclick=closeDrawer;
+  document.getElementById("drawerMask").onclick=closeDrawer;
+  document.getElementById("dSave").onclick=function(){
+    if(SAVED.has(it.title)) SAVED.delete(it.title); else SAVED.add(it.title);
+    saveSaved(); this.textContent=SAVED.has(it.title)?"已加入稍后读":"稍后读";
+    renderAll(); showToast(SAVED.has(it.title)?"已加入稍后读":"已移出稍后读");
+  };
+  document.querySelectorAll(".d-rel-item").forEach(function(a){
+    a.onclick=function(e){
+      e.preventDefault(); closeDrawer();
+      const t=document.getElementById("c"+a.dataset.jump);
+      if(t) t.scrollIntoView({behavior:"smooth",block:"center"});
+    };
+  });
+}
+function closeDrawer(){
+  const d=document.getElementById("drawer"); if(!d||d.hidden) return;
+  d.classList.remove("open");
+  setTimeout(function(){d.hidden=true;},220);
+  document.body.style.overflow="";
+}
 function renderAll(){
   const P=PROFILES[state.profile], now=bjNow();
   document.getElementById("dateTitle").textContent=now.y+" 年 "+now.m+" 月 "+now.d+" 日 "+WEEK[new Date(Date.UTC(now.y,now.m-1,now.d)).getUTCDay()];
@@ -454,6 +551,8 @@ function renderAll(){
     tagKeys(it).forEach(function(t){bump(LEARN.impr.tag,t,1);});
   });
   saveLearn();
+  state.view=flat; state.byIdx={};
+  flat.forEach(function(it){state.byIdx[it._idx]=it;});
   const domN=flat.filter(x=>x._dom).length, polN=flat.filter(x=>x._pol).length, relN=flat.filter(x=>x._grp).length;
   document.getElementById("subTitle").textContent="过去 24 小时 · 共 "+flat.length+" 条（已去重）· 国内 "+domN+" 条";
   document.getElementById("stats").innerHTML=
@@ -500,6 +599,7 @@ function applyFilter(){
     if(f==="dom") ok=c.dataset.dom==="1";
     if(f==="pol") ok=c.dataset.pol==="1";
     if(f==="rel") ok=c.dataset.rel==="1";
+    if(f==="saved") ok=SAVED.has(c.dataset.title);
     c.style.display=ok?"":"none";
   });
   document.querySelectorAll(".section").forEach(s=>{
@@ -531,14 +631,20 @@ window.addEventListener("resize",function(){clearTimeout(window.__rz);window.__r
 
 // 点击卡片：记录类别 / 标签点击，作为后续排序的轻量信号
 document.addEventListener("click",function(e){
-  const a=e.target.closest("a.card");
+  const a=e.target.closest(".card");
   if(!a) return;
   const cat=a.dataset.cat||"other";
   const tags=(a.dataset.tags||"").split(",").filter(Boolean);
   bump(LEARN.clicks.cat,cat,1);
   tags.forEach(function(t){bump(LEARN.clicks.tag,t,1);});
   saveLearn(); renderLearnLine();
-  showToast("已记录："+(CAT_LABEL[cat]||cat)+"，下次刷新生效");
+  openDrawer(a.dataset.idx);
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){closeDrawer();return;}
+  if((e.key==="Enter"||e.key===" ")&&e.target.classList&&e.target.classList.contains("card")){
+    e.preventDefault(); e.target.click();
+  }
 });
 
 loadData();
