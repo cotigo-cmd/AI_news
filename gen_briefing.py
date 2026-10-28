@@ -35,19 +35,33 @@ PROFILE = {
     "radar": {"daily": 5, "weekly": 8},
 }
 
-# 国内来源 / 厂商（命中即视为国内）
-DOM_RE = re.compile(
-    r"IT之家|公众号|微信|微博|B站|bilibili|机器之心|量子位|新智元|36氪|虎嗅|爱范儿|"
-    r"InfoQ|CSDN|掘金|开源中国|Gitee|博客园|知乎|澎湃|财新|第一财经|界面|钛媒体|雷峰网|"
-    r"阿里|腾讯|Tencent|百度|Baidu|字节|ByteDance|华为|Huawei|小米|Xiaomi|美团|京东|网易|快手|"
-    r"商汤|旷视|云从|依图|科大讯飞|讯飞|智谱|月之暗面|Moonshot|Kimi|DeepSeek|深度求索|"
-    r"MiniMax|阶跃|零一万物|百川|面壁|OpenBMB|智元|AGIBOT|宇树|Unitree|优必选|"
-    r"寒武纪|摩尔线程|壁仞|燧原|天数智芯|沐曦|海光|飞腾|龙芯|中科曙光|浪潮|中兴|新华三|"
-    r"中国移动|中国电信|中国联通|国家电网|通义|千问|Qwen|豆包|文心|混元|盘古|昇腾|"
-    r"中科院|清华|北大|之江|智源|BAAI|魔搭|ModelScope|火山引擎|阿里云|腾讯云|华为云|"
-    r"百度智能云|小红书|蚂蚁|生数|Vidu|上海AI|上海人工智能|商汤|昆仑万维|天工",
+# 国内 / 海外：按新闻内容范围判定，不看发布者
+DOM_CONTENT_RE = re.compile(
+    r"中国|国内|我国|国产|人民币|工信部|网信办|发改委|科技部|信通院|国务院|央行|"
+    r"教育部|国家数据局|东数西算|信创|阿里|腾讯|百度|字节|华为|小米|美团|京东|网易|快手|"
+    r"拼多多|比亚迪|大疆|商汤|旷视|科大讯飞|智谱|月之暗面|DeepSeek|深度求索|"
+    r"MiniMax|阶跃|零一万物|百川|面壁|智元|宇树|寒武纪|摩尔线程|壁仞|燧原|天数智芯|沐曦|"
+    r"海光|飞腾|龙芯|中科曙光|浪潮|中兴|新华三|中国移动|中国电信|中国联通|"
+    r"通义|千问|Qwen|豆包|文心|混元|盘古|昇腾|中科院|清华|北大|之江|智源|BAAI|"
+    r"魔搭|ModelScope|火山引擎|阿里云|腾讯云|华为云|百度智能云|小红书|蚂蚁|生数|Vidu|"
+    r"上海AI|上海人工智能|昆仑万维|天工|北京(?!时间)|上海|深圳|杭州|广州|成都|武汉|南京|合肥|苏州",
     re.I,
 )
+
+# 国内打不开的源，改用 AIHOT 站内页
+BLOCKED_HOSTS = ("x.com", "twitter.com", "youtube.com", "youtu.be", "t.me", "telegram.org",
+                 "facebook.com", "instagram.com", "reddit.com", "discord.com", "threads.net", "linkedin.com")
+
+
+def pick_href(it):
+    links = it.get("links") or {}
+    orig = links.get("original") or ""
+    host = urllib.parse.urlparse(orig).netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    if any(host == h or host.endswith("." + h) for h in BLOCKED_HOSTS):
+        return links.get("aihot") or orig or "#"
+    return orig or links.get("aihot") or "#"
 
 POLICY_KW = [
     "政策", "监管", "法规", "立法", "备案", "标准", "白皮书", "指导意见", "管理办法",
@@ -159,8 +173,7 @@ def radar_score(it):
 
 def enrich(it):
     text = ((it.get("title") or "") + " " + (it.get("summary") or "")).lower()
-    src = (it.get("source") or {}).get("name", "")
-    dom = bool(DOM_RE.search(src) or DOM_RE.search(it.get("title") or ""))
+    dom = bool(DOM_CONTENT_RE.search(text))
     pol = any(has_kw(text, k) for k in POLICY_KW)
     eco = any(has_kw(text, k) for k in ECO_KW)
     dgroup = None
@@ -252,29 +265,26 @@ def tag_html(it):
 
 
 def card_html(idx, it):
-    links = it.get("links") or {}
-    href = links.get("original") or links.get("aihot") or "#"
+    href = pick_href(it)
     return f'''    <a class="card" id="c{idx}" href="{esc(href)}" target="_blank" rel="noopener noreferrer"
        data-dom="{1 if it["_dom"] else 0}" data-pol="{1 if it["_pol"] else 0}" data-rel="{1 if it["_domain"] else 0}">
       <div class="card-top"><span class="num">{idx}</span><span class="src-chip">{esc((it.get("source") or {}).get("name",""))}</span></div>
       <div class="card-meta"><span class="time">{esc(it["_time"])}</span>{tag_html(it)}</div>
       <h3 class="card-title">{esc(it.get("title",""))}</h3>
       <p class="card-sum">{esc(truncate(it.get("summary","")))}</p>
-      <span class="card-link">阅读原文 &rarr;</span>
+      <span class="card-link">查看详情 &rarr;</span>
     </a>'''
 
 
 def radar_html(rows):
     out = []
     for n, it in enumerate(rows, 1):
-        links = it.get("links") or {}
-        href = links.get("original") or links.get("aihot") or "#"
-        anchor = f' <a class="r-jump" href="#c{it["_idx"]}">第 {it["_idx"]} 条</a>' if it.get("_idx") else ""
+        href = ("#c%d" % it["_idx"]) if it.get("_idx") else pick_href(it)
         out.append(f'''    <div class="radar-row" data-dom="{1 if it["_dom"] else 0}" data-pol="{1 if it["_pol"] else 0}" data-rel="{1 if it["_domain"] else 0}">
       <div class="r-rank">{n:02d}</div>
       <div class="r-body">
-        <a class="r-title" href="{esc(href)}" target="_blank" rel="noopener noreferrer">{esc(it.get("title",""))}</a>
-        <div class="r-meta">{esc((it.get("source") or {}).get("name",""))} · {esc(it["_time"])} · 相关 {it["_rel"]}{anchor}</div>
+        <a class="r-title" href="{esc(href)}" title="跳到下方第 {it.get("_idx","")} 条">{esc(it.get("title",""))}</a>
+        <div class="r-meta">{esc((it.get("source") or {}).get("name",""))} · {esc(it["_time"])} · 相关 {it["_rel"]}</div>
         <div class="r-insp">可借鉴：{esc(it["_insp"])}</div>
       </div>
     </div>''')
