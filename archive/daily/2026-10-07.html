@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 每日晨报 · 2026 年 10 月 7 日 周三</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1f2937; line-height: 1.6; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 18px 60px; }
+  .hero { background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 55%, #6d28d9 100%); color: #fff; padding: 42px 18px 34px; border-radius: 0 0 22px 22px; }
+  .hero .inner { max-width: 1100px; margin: 0 auto; }
+  .eyebrow { font-size: 13px; letter-spacing: 3px; opacity: .85; text-transform: uppercase; }
+  .hero h1 { font-size: 30px; margin: 8px 0 4px; font-weight: 800; }
+  .hero .sub { opacity: .9; font-size: 15px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .stat { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 12px; padding: 10px 14px; font-size: 14px; backdrop-filter: blur(4px); }
+  .stat b { font-size: 20px; display: block; }
+  .lead { margin-top: 18px; background: rgba(255,255,255,.1); border-left: 3px solid #fbbf24; padding: 12px 16px; border-radius: 8px; font-size: 15px; }
+  .lead .lt { font-weight: 700; color: #fde68a; }
+  .nav { position: sticky; top: 0; z-index: 20; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,.04); }
+  .nav .inner { max-width: 1100px; margin: 0 auto; padding: 0 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .nav-pill { --c:#333; text-decoration: none; color: #374151; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 999px; padding: 6px 12px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; transition: .15s; }
+  .nav-pill:hover { border-color: var(--c); color: var(--c); }
+  .nav-pill b { background: var(--c); color: #fff; border-radius: 999px; padding: 0 7px; font-size: 12px; }
+  .section { margin-top: 34px; }
+  .sec-head { display: flex; align-items: center; gap: 10px; font-size: 21px; color: #111827; padding-bottom: 8px; border-bottom: 2px solid var(--c); margin-bottom: 16px; }
+  .sec-head .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .sec-count { margin-left: auto; background: var(--c); color: #fff; font-size: 13px; border-radius: 999px; padding: 2px 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card { background: #fff; border: 1px solid #eceef1; border-radius: 14px; padding: 16px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 10px; transition: .18s; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,.1); border-color: #cbd5e1; }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .num { background: #111827; color: #fff; font-weight: 700; font-size: 13px; min-width: 26px; height: 26px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px; }
+  .src-chip { font-size: 12px; color: #475569; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 999px; padding: 3px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 78%; }
+  .card-title { font-size: 16px; font-weight: 700; line-height: 1.45; color: #0f172a; }
+  .card-sum { font-size: 14px; color: #475569; flex: 1; }
+  .card-link { font-size: 13px; color: #2563eb; font-weight: 600; }
+  .empty { grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 28px; border: 1px dashed #d8dee6; border-radius: 12px; background: #fafbfc; }
+  footer { margin-top: 46px; padding-top: 18px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #64748b; text-align: center; }
+  footer a { color: #2563eb; text-decoration: none; }
+  @media (max-width: 520px) { .hero h1 { font-size: 23px; } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <header class="hero"><div class="inner">
+    <div class="eyebrow">AI HOT 每日晨报</div>
+    <h1>2026 年 10 月 7 日 周三</h1>
+    <div class="sub">数据窗口：2026 年 10 月 6 日 ~ 2026 年 10 月 7 日 · 共 12 条</div>
+    <div class="stat-row">
+      <div class="stat">总条数<b>12</b></div>
+      <div class="stat">模型发布/更新<b>3</b></div>
+      <div class="stat">产品发布/更新<b>3</b></div>
+      <div class="stat">行业动态<b>3</b></div>
+      <div class="stat">论文研究<b>1</b></div>
+      <div class="stat">技巧与观点<b>2</b></div>
+    </div>
+    <div class="lead"><span class="lt">头条 · </span>Mistral 发布 Mistral Large 4，Artificial Analysis 评测称其为美中之外最智能模型<br>Mistral 发布 Mistral Large 4（Research Public Preview），在 Artificial Analysis Intelligence Index 得分 38，与 GPT-6 Luna（max, 38）相当，为美中之外最智能模型，计划 10 月底开源 1T 参数（49B 激活）权重。</div>
+  </div></header>
+  <nav class="nav"><div class="inner"><a class="nav-pill" href="#sec-0" style="--c:#2563eb">模型发布/更新<b>3</b></a><a class="nav-pill" href="#sec-1" style="--c:#7c3aed">产品发布/更新<b>3</b></a><a class="nav-pill" href="#sec-2" style="--c:#0d9488">行业动态<b>3</b></a><a class="nav-pill" href="#sec-3" style="--c:#d97706">论文研究<b>1</b></a><a class="nav-pill" href="#sec-4" style="--c:#db2777">技巧与观点<b>2</b></a></div></nav>
+  <main class="wrap">
+    
+    <section id="sec-0" class="section">
+      <h2 class="sec-head" style="--c:#2563eb"><span class="dot" style="background:#2563eb"></span>模型发布/更新<span class="sec-count">3</span></h2>
+      <div class="grid">    <a class="card" href="https://artificialanalysis.ai/articles/mistral-large-4-france-ai" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">1</span><span class="src-chip">Artificial Analysis 完整文章（网页）</span></div>
+      <h3 class="card-title">Mistral 发布 Mistral Large 4，Artificial Analysis 评测称其为美中之外最智能模型</h3>
+      <p class="card-sum">Mistral 发布 Mistral Large 4（Research Public Preview），在 Artif…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://ai.google.dev/gemini-api/docs/changelog#10-06-2026" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">2</span><span class="src-chip">Gemini API：更新日志（网页）</span></div>
+      <h3 class="card-title">Gemini Nano Banana 2.1 正式发布，gemini-3.1-flash-image 将于 2026 年 10 月 29 日停用</h3>
+      <p class="card-sum">Google 发布 Gemini Nano Banana 2.1（gemini-nano-banana-2.1），定位…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://deepmind.google/blog/embeddinggemma-2-an-open-lightweight-multimodal-embedding-model/" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">3</span><span class="src-chip">Google DeepMind：Blog（RSS）</span></div>
+      <h3 class="card-title">Google DeepMind 发布开源轻量多模态嵌入模型 EmbeddingGemma 2</h3>
+      <p class="card-sum">Google DeepMind 发布 EmbeddingGemma 2，基于 Gemma 4 架构，以 Apache …</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div>
+    </section>
+    <section id="sec-1" class="section">
+      <h2 class="sec-head" style="--c:#7c3aed"><span class="dot" style="background:#7c3aed"></span>产品发布/更新<span class="sec-count">3</span></h2>
+      <div class="grid">    <a class="card" href="https://www.youtube.com/watch?v=idJQMJwHtyM" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">4</span><span class="src-chip">Claude：YouTube（RSS）</span></div>
+      <h3 class="card-title">Claude for Google Workspace 开启 beta，可直接在 Docs、Sheets、Slides 中编辑</h3>
+      <p class="card-sum">Claude 宣布推出 Claude for Google Workspace（beta），一次安装即可覆盖 Goog…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://x.com/OpenRouter/status/2107471559040635360" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">5</span><span class="src-chip">X：OpenRouter (@OpenRouter)</span></div>
+      <h3 class="card-title">Mistral Large 4 上线 OpenRouter 公测：1T 参数、512K 上下文</h3>
+      <p class="card-sum">Mistral Large 4 现已在 OpenRouter 开放公测，规格为 1T 参数（49B 激活）、原生多模态…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://www.anthropic.com/news/cyber-verification-program" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">6</span><span class="src-chip">Anthropic：Newsroom（网页）</span></div>
+      <h3 class="card-title">Anthropic 扩展 Cyber Verification Program，推出三档网络安全访问层级</h3>
+      <p class="card-sum">Anthropic 启动扩展版 Cyber Verification Program（CVP），整合 Project …</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div>
+    </section>
+    <section id="sec-2" class="section">
+      <h2 class="sec-head" style="--c:#0d9488"><span class="dot" style="background:#0d9488"></span>行业动态<span class="sec-count">3</span></h2>
+      <div class="grid">    <a class="card" href="https://x.com/thexpin/status/2107524306058289533" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">7</span><span class="src-chip">X：X.PIN (@thexpin)</span></div>
+      <h3 class="card-title">DeepSeek 据报道接近完成至少 800 亿元融资，腾讯与宁德时代参与</h3>
+      <p class="card-sum">据 Bloomberg 援引知情人士报道，DeepSeek 接近完成至少 800 亿元（约 120 亿美元）融资，高于…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://www.404media.co/her-ai-generated-video-swayed-the-judge-the-court-said-it-carried-undue-emotional-weight/" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">8</span><span class="src-chip">404 Media（RSS）</span></div>
+      <h3 class="card-title">亚利桑那州法院裁定AI生成受害者视频带有不当情感分量，凶手须重新量刑</h3>
+      <p class="card-sum">亚利桑那州上诉法院裁定，Gabriel Horcasitas过失杀人案量刑中使用的受害者Christopher Pel…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://x.com/rohanpaul_ai/status/2107346890648076595" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">9</span><span class="src-chip">X：Rohan Paul (@rohanpaul_ai)</span></div>
+      <h3 class="card-title">Anthropic 5180亿美元计算力支出中约4137亿美元无论使用与否都需支付</h3>
+      <p class="card-sum">Anthropic 计划未来数年在云计算和计算力上支出 5180 亿美元，其中约 4137 亿美元为不可撤销承诺，即使…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div>
+    </section>
+    <section id="sec-3" class="section">
+      <h2 class="sec-head" style="--c:#d97706"><span class="dot" style="background:#d97706"></span>论文研究<span class="sec-count">1</span></h2>
+      <div class="grid">    <a class="card" href="https://openai.com/index/sharing-ai-progress-in-mathematics/" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">10</span><span class="src-chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span></div>
+      <h3 class="card-title">OpenAI 发布内部前沿模型产出的数学研究成果</h3>
+      <p class="card-sum">OpenAI 发布一批由内部前沿模型产出的新数学成果，成果以 GitHub 仓库形式公开，并附论文修订与引用协议，其中…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div>
+    </section>
+    <section id="sec-4" class="section">
+      <h2 class="sec-head" style="--c:#db2777"><span class="dot" style="background:#db2777"></span>技巧与观点<span class="sec-count">2</span></h2>
+      <div class="grid">    <a class="card" href="https://claude.dev/blog/claude-code-in-the-cloud/" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">11</span><span class="src-chip">Anthropic：Claude.dev 开发者博客（RSS）</span></div>
+      <h3 class="card-title">Claude Code 云端会话实战指南：每个任务独占一台 VM，可并行跑任务并以分支收尾</h3>
+      <p class="card-sum">Claude Code 推出云端会话：每个任务在独立 VM 上运行，仓库克隆到新分支，可从 claude.ai/cod…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" href="https://x.com/Khazix0918/status/2107297777583825359" target="_blank" rel="noopener noreferrer">
+      <div class="card-top"><span class="num">12</span><span class="src-chip">X：卡兹克 (@Khazix0918)</span></div>
+      <h3 class="card-title">卡兹克解读 A16Z 两份 AI 报告：AI 使用很广但用得还浅，头部 1% 用户月均花 903 美元</h3>
+      <p class="card-sum">作者解读 A16Z 第七版《Top 100 消费级 AI 应用》和 90 多页的《市场状况 II》报告，指出反常识数据…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div>
+    </section>
+    <footer>
+      <p>本期共 12 条 · 数据源：<a href="https://aihot.news/daily/2026-10-07" target="_blank" rel="noopener noreferrer">AIHOT</a>（https://aihot.news/daily/2026-10-07）</p>
+      <p>生成时间：2026 年 10 月 07 日 08:00（北京时间） · 标题与摘要来自 AI HOT 公开接口，引用数字/政策请以原文为准</p>
+    </footer>
+  </main>
+</body>
+</html>

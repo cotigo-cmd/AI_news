@@ -2,7 +2,8 @@
 
 把每天上百条 AI 新闻，按你的关注画像重排成一份能直接读的晨报。
 
-线上地址：<https://cotigo-cmd.github.io/AI_news/>
+线上地址（索引页）：<https://cotigo-cmd.github.io/AI_news/>
+实时版：<https://cotigo-cmd.github.io/AI_news/live.html>
 
 ![首屏](screenshots/01_home.png)
 
@@ -26,12 +27,17 @@ AI 资讯的问题不是「太少」，而是「和你无关的太多」：海�
 ## 结构
 
 ```
-index.html            自包含实时版（内嵌离线兜底数据）
-live_template.html    前端模板（含 __FALLBACK__ 占位符）
-build_live_app.py     注入当日兜底数据，生成 index.html
-gen_briefing.py       本地晨报 / 周报生成器 + 定时任务
-screenshots/          桌面与移动端截图
-.nojekyll             关闭 Jekyll，静态文件原样发布
+index.html                  索引页：实时入口 + 日报/周报归档
+live.html                   实时版（自包含，内嵌离线兜底）
+archive/daily/*.html        日报归档（按日期）
+archive/weekly/*.html       周报归档（按日期）
+archive_index_template.html 索引页模板
+build_archive_index.py      扫描 archive/ 生成 index.html
+live_template.html          实时版前端模板（含 __FALLBACK__ 占位符）
+build_live_app.py           注入当日兜底数据，生成 live.html
+gen_briefing.py             本地晨报 / 周报生成器 + 定时任务
+screenshots/                桌面与移动端截图
+.nojekyll                   关闭 Jekyll，静态文件原样发布
 ```
 
 ## 本地运行
@@ -40,15 +46,23 @@ screenshots/          桌面与移动端截图
 python -m http.server 8000
 ```
 
-打开 <http://localhost:8000>。
+打开 <http://localhost:8000> 是索引页，实时版在 <http://localhost:8000/live.html>。
 
-重新生成兜底快照（需要联网拉取 AI HOT）：
+重新生成实时版兜底快照（需要联网拉取 AI HOT）：
 
 ```bash
-python build_live_app.py
+python build_live_app.py live.html
+```
+
+新增往期归档后，重新生成索引页：
+
+```bash
+python build_archive_index.py
 ```
 
 ## 可分享的视图
+
+实时版（`live.html`）支持：
 
 | 参数 | 作用 |
 | --- | --- |

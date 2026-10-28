@@ -2,12 +2,13 @@
 """构建实时版 index.html：把当日数据作为离线兜底注入模板。
 实时页面本身会在浏览器直连 AI HOT 接口；此兜底仅在接口不可用时展示。
 """
-import json, datetime, os, re
+import json, datetime, os, re, sys
 import gen_briefing as g
 
 OUTDIR = os.path.dirname(os.path.abspath(__file__))
 TPL = os.path.join(OUTDIR, "live_template.html")
-OUT = os.path.join(OUTDIR, "index.html")
+OUT_NAME = sys.argv[1] if len(sys.argv) > 1 else "index.html"
+OUT = os.path.join(OUTDIR, OUT_NAME)
 MARK = '/*__FALLBACK__*/{"ts":"","items":[]}'
 
 items = g.fetch_items("all", "24h", 200)

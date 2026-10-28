@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 晨报 · 2026 年 10 月 28 日 周三</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1f2937;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px 60px}
+.hero{background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 55%,#6d28d9 100%);color:#fff;padding:42px 18px 34px;border-radius:0 0 22px 22px}
+.hero .inner{max-width:1100px;margin:0 auto}
+.eyebrow{font-size:13px;letter-spacing:3px;opacity:.85;text-transform:uppercase}
+.hero h1{font-size:30px;margin:8px 0 4px;font-weight:800}
+.hero .sub{opacity:.9;font-size:15px}
+.stat-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:9px 13px;font-size:13px}
+.stat b{font-size:20px;display:block}
+.sec-line{margin-top:10px;font-size:13px;opacity:.9}
+.profile{margin-top:12px;font-size:12.5px;opacity:.82;border-top:1px solid rgba(255,255,255,.2);padding-top:10px}
+.lead{margin-top:16px;background:rgba(255,255,255,.1);border-left:3px solid #fbbf24;padding:12px 16px;border-radius:8px;font-size:15px}
+.lead .lt{font-weight:700;color:#fde68a}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.nav .inner{max-width:1100px;margin:0 auto;padding:0 18px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.filters button{border:1px solid #e5e7eb;background:#f8fafc;color:#374151;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;transition:.15s}
+.filters button:hover{border-color:#94a3b8}
+.filters button.on{background:#111827;color:#fff;border-color:#111827}
+.anchors{display:flex;gap:8px;flex-wrap:wrap}
+.nav-pill{--c:#333;text-decoration:none;color:#374151;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:5px 11px;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}
+.nav-pill:hover{border-color:var(--c);color:var(--c)}
+.nav-pill b{background:var(--c);color:#fff;border-radius:999px;padding:0 7px;font-size:12px}
+.radar{margin-top:30px;background:#fff;border:1px solid #e8ecf3;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.radar-head{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;color:#111827;margin-bottom:4px}
+.radar-head .badge{font-size:12px;font-weight:600;color:#7c3aed;background:#f3e8ff;border-radius:999px;padding:2px 9px}
+.radar-desc{font-size:13px;color:#64748b;margin-bottom:12px}
+.radar-row{display:flex;gap:14px;padding:12px 0;border-top:1px dashed #e8ecf3}
+.radar-row:first-of-type{border-top:0}
+.r-rank{font-size:22px;font-weight:800;color:#c7d2fe;min-width:34px}
+.r-body{flex:1;min-width:0}
+.r-title{font-size:15.5px;font-weight:700;color:#0f172a;text-decoration:none;display:block}
+.r-title:hover{color:#2563eb}
+.r-meta{font-size:12.5px;color:#64748b;margin:3px 0}
+.r-jump{color:#2563eb;text-decoration:none;margin-left:6px}
+.r-insp{font-size:13px;color:#7c3aed;background:#faf5ff;border-left:2px solid #c4b5fd;padding:5px 10px;border-radius:0 6px 6px 0;margin-top:5px}
+.section{margin-top:34px}
+.sec-head{display:flex;align-items:center;gap:10px;font-size:21px;color:#111827;padding-bottom:8px;border-bottom:2px solid var(--c);margin-bottom:16px}
+.sec-head .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.sec-count{margin-left:auto;background:var(--c);color:#fff;font-size:13px;border-radius:999px;padding:2px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #eceef1;border-radius:14px;padding:16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:9px;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.1);border-color:#cbd5e1}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.num{background:#111827;color:#fff;font-weight:700;font-size:13px;min-width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.src-chip{font-size:12px;color:#475569;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:3px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:78%}
+.card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.time{font-size:12px;color:#94a3b8}
+.tag{font-size:11.5px;border-radius:999px;padding:1px 7px;border:1px solid transparent}
+.tag.dom{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.tag.ovs{background:#f1f5f9;color:#64748b;border-color:#e2e8f0}
+.tag.pol{background:#fef3c7;color:#b45309;border-color:#fde68a}
+.tag.eco{background:#e0f2fe;color:#0369a1;border-color:#bae6fd}
+.tag.rel{background:#ede9fe;color:#6d28d9;border-color:#ddd6fe}
+.tag.muted{background:#f8fafc;color:#94a3b8;border-color:#eef2f7}
+.tag.score{background:#111827;color:#fff}
+.card-title{font-size:16px;font-weight:700;line-height:1.45;color:#0f172a}
+.card-sum{font-size:14px;color:#475569;flex:1}
+.card-link{font-size:13px;color:#2563eb;font-weight:600}
+.empty{grid-column:1/-1;text-align:center;color:#94a3b8;padding:28px;border:1px dashed #d8dee6;border-radius:12px;background:#fafbfc}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid #e5e7eb;font-size:13px;color:#64748b;text-align:center}
+footer a{color:#2563eb;text-decoration:none}
+@media(max-width:520px){.hero h1{font-size:23px}.grid{grid-template-columns:1fr}.r-rank{min-width:26px;font-size:18px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="inner">
+  <div class="eyebrow">AI HOT · 个性化晨报</div>
+  <h1>2026 年 10 月 28 日 周三</h1>
+  <div class="sub">过去 24 小时 · 共 35 条（已去重）· 国内 19 条</div>
+  <div class="stat-row">
+    <div class="stat">总条数<b>35</b></div>
+    <div class="stat">国内<b>19</b></div>
+    <div class="stat">政策/协议<b>12</b></div>
+    <div class="stat">★ AI4Science<b>3</b></div>
+  </div>
+  <div class="sec-line">模型发布/更新 7 · 产品发布/更新 7 · 行业动态 7 · 论文研究 7 · 技巧与观点 7</div>
+  <div class="lead"><span class="lt">编辑头条 · </span>Anthropic 招股书拆解：IPO 计划募资约 1000 亿美元背后的 11 个细节<br>作者总结 Anthropic IPO 招股书的 11 个细节，计划募资约 1000 亿美元、估值或达 1.5万亿～2万亿。收入五个季度涨 30 倍，今年二季度经营利润首次转正 9.74 亿美元，但上半年净亏 807 亿美元，主要来自可转换票据公允价值变动；调整后净利润为正 26.71 亿美元。</div>
+  <div class="profile">加权画像：AI4Science 相关性 &gt; 政策/协议 &gt; 国内 &gt; 热度 · 已去重，含未入精选条目（标签标注）</div>
+</div></header>
+
+<nav class="nav"><div class="inner">
+  <div class="filters">
+    <button data-f="all" class="on">全部</button>
+    <button data-f="dom">只看国内</button>
+    <button data-f="pol">政策 / 协议</button>
+    <button data-f="rel">★ 与我相关</button>
+  </div>
+  <div class="anchors"><a class="nav-pill" href="#radar" style="--c:#7c3aed">灵感雷达<b>5</b></a><a class="nav-pill" href="#sec-0" style="--c:#2563eb">模型发布/更新<b>7</b></a><a class="nav-pill" href="#sec-1" style="--c:#7c3aed">产品发布/更新<b>7</b></a><a class="nav-pill" href="#sec-2" style="--c:#0d9488">行业动态<b>7</b></a><a class="nav-pill" href="#sec-3" style="--c:#d97706">论文研究<b>7</b></a><a class="nav-pill" href="#sec-4" style="--c:#db2777">技巧与观点<b>7</b></a></div>
+</div></nav>
+
+<main class="wrap">
+  <section id="radar" class="radar">
+    <div class="radar-head">灵感雷达 <span class="badge">按你的画像加权</span></div>
+    <div class="radar-desc">从本期条目中挑出与你最相关、或最可能触发项目灵感的前 5 条，附规则化「可借鉴」提示。</div>
+        <div class="radar-row" data-dom="0" data-pol="0" data-rel="1">
+      <div class="r-rank">01</div>
+      <div class="r-body">
+        <a class="r-title" href="https://x.com/rohanpaul_ai/status/2115224910603890778" target="_blank" rel="noopener noreferrer">Axiom 智能体集群用 24 天完成有限单群分类定理的机器验证</a>
+        <div class="r-meta">X：Rohan Paul (@rohanpaul_ai) · 今天 07:31 · 相关 65 <a class="r-jump" href="#c15">第 15 条</a></div>
+        <div class="r-insp">可借鉴：数学 / 形式化线索，可能启发课程选题或验证方法。</div>
+      </div>
+    </div>    <div class="radar-row" data-dom="1" data-pol="0" data-rel="1">
+      <div class="r-rank">02</div>
+      <div class="r-body">
+        <a class="r-title" href="https://www.ithome.com/1/019/131.htm" target="_blank" rel="noopener noreferrer">摩尔线程开源 Megatron-MUSA-Titan，聚焦万卡级集群万亿参数 MoE 模型训练</a>
+        <div class="r-meta">IT之家·人工智能 · 今天 18:16 · 相关 71 <a class="r-jump" href="#c8">第 8 条</a></div>
+        <div class="r-insp">可借鉴：并行 / 加速策略可对照你求解器的性能瓶颈。</div>
+      </div>
+    </div>    <div class="radar-row" data-dom="1" data-pol="0" data-rel="1">
+      <div class="r-rank">03</div>
+      <div class="r-body">
+        <a class="r-title" href="https://github.com/inclusionAI/ubtree" target="_blank" rel="noopener noreferrer">蚂蚁 inclusionAI 发布 UBTree 项目页：用 Unigram 与 Bigram 模型并行树草稿加速投机解码</a>
+        <div class="r-meta">蚂蚁 inclusionAI：GitHub 新仓库 · 今天 15:48 · 相关 54 <a class="r-jump" href="#c29">第 29 条</a></div>
+        <div class="r-insp">可借鉴：并行 / 加速策略可对照你求解器的性能瓶颈。</div>
+      </div>
+    </div>    <div class="radar-row" data-dom="1" data-pol="1" data-rel="0">
+      <div class="r-rank">04</div>
+      <div class="r-body">
+        <a class="r-title" href="https://www.ithome.com/1/018/906.htm" target="_blank" rel="noopener noreferrer">Anthropic 上市文件披露四类芯片混用布局，分析师称英伟达定价权或承压</a>
+        <div class="r-meta">IT之家·人工智能 · 今天 14:35 · 相关 51 <a class="r-jump" href="#c16">第 16 条</a></div>
+        <div class="r-insp">可借鉴：政策 / 协议信号，可能影响选题方向与合规边界。</div>
+      </div>
+    </div>    <div class="radar-row" data-dom="1" data-pol="1" data-rel="0">
+      <div class="r-rank">05</div>
+      <div class="r-body">
+        <a class="r-title" href="https://www.ithome.com/1/018/754.htm" target="_blank" rel="noopener noreferrer">消息称 OpenAI 计划正式导入谷歌 TPU，已招募工程师负责模型适配优化</a>
+        <div class="r-meta">IT之家·人工智能 · 今天 09:59 · 相关 50 <a class="r-jump" href="#c17">第 17 条</a></div>
+        <div class="r-insp">可借鉴：政策 / 协议信号，可能影响选题方向与合规边界。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-0" class="section"><h2 class="sec-head" style="--c:#2563eb"><span class="dot" style="background:#2563eb"></span>模型发布/更新<span class="sec-count">7</span></h2><div class="grid">    <a class="card" id="c1" href="https://x.com/ArtificialAnlys/status/2115155299334246584" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">1</span><span class="src-chip">X：Artificial Analysis (@ArtificialAnlys)</span></div>
+      <div class="card-meta"><span class="time">今天 02:54</span><span class="tag dom">国内</span><span class="tag pol">政策/协议</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 48</span></div>
+      <h3 class="card-title">蚂蚁 Ling 3.1 Flash 1019 开源模型评测提升至 44 分</h3>
+      <p class="card-sum">蚂蚁 Ling 3.1 Flash 1019 以 MIT 协议开源，560B 总参数、25B 激活参数、1M toke…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c2" href="https://mp.weixin.qq.com/s?__biz=MzkyODk2MDQwNw%3D%3D&amp;mid=2247488184&amp;idx=1&amp;sn=805241b8e4602844badeb83db3f73b44" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">2</span><span class="src-chip">公众号：蚂蚁百灵（Ling）</span></div>
+      <div class="card-meta"><span class="time">今天 09:00</span><span class="tag dom">国内</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 43</span></div>
+      <h3 class="card-title">蚂蚁百灵发布灵光 2.0 并开源 Ling-3.1-flash-base 与 Ling-3.1-flash-1019</h3>
+      <p class="card-sum">蚂蚁百灵 10 月 27 日发布灵光 2.0，升级为能主动跟进任务、持续管理复杂事务的个人 AI 助理，并开源了 Li…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c3" href="https://www.ithome.com/1/018/711.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">3</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 07:04</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 42</span></div>
+      <h3 class="card-title">谷歌 DeepMind 发布世界模型 Genie 4：一句话生成可交互虚拟世界并同步音频</h3>
+      <p class="card-sum">谷歌 DeepMind 于周二推出世界模型 Genie 4，处于研究预览阶段，可生成拟真度更高的可交互虚拟世界，并首次…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c4" href="https://x.com/OpenBMB/status/2115323459173806210" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">4</span><span class="src-chip">X：面壁智能 OpenBMB (@OpenBMB)</span></div>
+      <div class="card-meta"><span class="time">今天 14:03</span><span class="tag dom">国内</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 40</span></div>
+      <h3 class="card-title">面壁智能 OpenBMB 回应第三方对 MiniCPM-OCR 的评测</h3>
+      <p class="card-sum">面壁智能 OpenBMB 转评 @wikiwayne 对 MiniCPM-OCR 的评测，感谢其透明对比并分享了结果与…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c5" href="https://www.ithome.com/1/018/772.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">5</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 10:37</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 38</span></div>
+      <h3 class="card-title">微软发布 MAI-Image-2.7-Preview 图像编辑模型，AA-Image-Editing v2.1 榜单排名第二</h3>
+      <p class="card-sum">微软于 10 月 27 日推出图像编辑模型 MAI-Image-2.7-Preview，在 Artificial An…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c6" href="https://www.ithome.com/1/018/757.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">6</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 10:09</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 37</span></div>
+      <h3 class="card-title">谷歌更新 Android Bench 榜单：Gemini 4 Argon 编程能力落后于 Claude 与 GPT</h3>
+      <p class="card-sum">谷歌更新评估安卓编程辅助能力的 Android Bench 榜单，新增 GPT-6 Sol、GPT-6.1 Sol、C…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c7" href="https://www.ithome.com/1/019/099.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">7</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 17:49</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 35</span></div>
+      <h3 class="card-title">Liquid AI 发布 LFM3 模型家族，首批多款模型均基于 LFM3-1.7B-Base</h3>
+      <p class="card-sum">Liquid AI 于当地时间 27 日发布 LFM3 模型家族，采用全新的三混合层架构，在 22T 词元上预训练。首…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div></section><section id="sec-1" class="section"><h2 class="sec-head" style="--c:#7c3aed"><span class="dot" style="background:#7c3aed"></span>产品发布/更新<span class="sec-count">7</span></h2><div class="grid">    <a class="card" id="c8" href="https://www.ithome.com/1/019/131.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="1">
+      <div class="card-top"><span class="num">8</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 18:16</span><span class="tag dom">国内</span><span class="tag eco">开源/生态</span><span class="tag rel">★ AI4Science</span><span class="tag muted">未入精选</span><span class="tag score">相关 71</span></div>
+      <h3 class="card-title">摩尔线程开源 Megatron-MUSA-Titan，聚焦万卡级集群万亿参数 MoE 模型训练</h3>
+      <p class="card-sum">摩尔线程宣布开源大模型训练基础设施项目 Megatron-MUSA-Titan，基于其全功能 GPU，面向万卡级集群的…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c9" href="https://www.ithome.com/1/018/734.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">9</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 08:55</span><span class="tag dom">国内</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 47</span></div>
+      <h3 class="card-title">OpenAI 面向所有 ChatGPT 用户开放 iCloud Mail 与 iCloud Calendar 插件</h3>
+      <p class="card-sum">OpenAI 于 10 月 27 日发布博文，宣布向所有 ChatGPT 套餐用户（含 Free、Go、Plus、Pr…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c10" href="https://www.ithome.com/1/018/723.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">10</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 08:00</span><span class="tag dom">国内</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 45</span></div>
+      <h3 class="card-title">Opera 推出 WebAI 网页标准，支持浏览器本地运行 AI 模型</h3>
+      <p class="card-sum">Opera 推出名为 WebAI 的新 Web 标准，允许用户直接在浏览器中运行 AI 模型，无需依赖云端服务。该标准…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c11" href="https://www.llamaindex.ai/blog/introducing-the-document-parsing-protocol" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">11</span><span class="src-chip">LlamaIndex：产品、工程与评测</span></div>
+      <div class="card-meta"><span class="time">今天 00:00</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 38</span></div>
+      <h3 class="card-title">LlamaIndex 发布 Document Parsing Protocol 0.1 工作草案</h3>
+      <p class="card-sum">LlamaIndex 发布 Document Parsing Protocol（DPP）0.1 工作草案，为文档解析定…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c12" href="https://x.com/testingcatalog/status/2115370094658240579" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">12</span><span class="src-chip">X：Testing Catalog (@testingcatalog)</span></div>
+      <div class="card-meta"><span class="time">今天 17:08</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 30</span></div>
+      <h3 class="card-title">Claude Duet 向美国 Max 用户开放</h3>
+      <p class="card-sum">ANTHROPIC 🔥：Claude Duet 正在向美国 Claude Max 用户推送，美国 Pro 用户接下来也…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c13" href="https://x.com/indigox/status/2115292365376323957" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">13</span><span class="src-chip">X：indigo (@indigox)</span></div>
+      <div class="card-meta"><span class="time">今天 11:59</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 30</span></div>
+      <h3 class="card-title">Stripe 推出 A2A 支付功能</h3>
+      <p class="card-sum">A2A 支付 @0xshawnpang</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c14" href="https://x.com/MeshyAI/status/2115276078571000061" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">14</span><span class="src-chip">X：Meshy (@MeshyAI)</span></div>
+      <div class="card-meta"><span class="time">今天 10:54</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 29</span></div>
+      <h3 class="card-title">Meshy 接入 MCP for Blender</h3>
+      <p class="card-sum">把你的 Meshy key 带到 MCP for Blender 🔑
+向你的智能体要一个模型，它就会落到你的 Blen…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div></section><section id="sec-2" class="section"><h2 class="sec-head" style="--c:#0d9488"><span class="dot" style="background:#0d9488"></span>行业动态<span class="sec-count">7</span></h2><div class="grid">    <a class="card" id="c15" href="https://x.com/rohanpaul_ai/status/2115224910603890778" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="1">
+      <div class="card-top"><span class="num">15</span><span class="src-chip">X：Rohan Paul (@rohanpaul_ai)</span></div>
+      <div class="card-meta"><span class="time">今天 07:31</span><span class="tag ovs">海外</span><span class="tag eco">开源/生态</span><span class="tag rel">★ AI4Science</span><span class="tag score">相关 65</span></div>
+      <h3 class="card-title">Axiom 智能体集群用 24 天完成有限单群分类定理的机器验证</h3>
+      <p class="card-sum">作者称 Verified AI 迎来标志性月份，Axiom 的 AI 智能体集群用 24 天完成数学史上最长证明的验证…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c16" href="https://www.ithome.com/1/018/906.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">16</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 14:35</span><span class="tag dom">国内</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 51</span></div>
+      <h3 class="card-title">Anthropic 上市文件披露四类芯片混用布局，分析师称英伟达定价权或承压</h3>
+      <p class="card-sum">据《商业内幕》10 月 28 日报道，Anthropic 在 S-1 上市申请文件中披露，公司把多家战略合作伙伴的算力…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c17" href="https://www.ithome.com/1/018/754.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">17</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 09:59</span><span class="tag dom">国内</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 50</span></div>
+      <h3 class="card-title">消息称 OpenAI 计划正式导入谷歌 TPU，已招募工程师负责模型适配优化</h3>
+      <p class="card-sum">The Information 报道称 OpenAI 计划正式导入谷歌 Google Cloud 的 TPU，并正在招…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c18" href="https://x.com/SaitoWu/status/2115376256929948006" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">18</span><span class="src-chip">X：Saito 硬地骇客 (@SaitoWu)</span></div>
+      <div class="card-meta"><span class="time">今天 17:32</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag score">相关 43</span></div>
+      <h3 class="card-title">Anthropic S-1 显示 90% 增量毛利，SemiAnalysis 播客详解其中数字</h3>
+      <p class="card-sum">Saito 转述 SemiAnalysis 播客对 Anthropic S-1 的解读：招股书口径为增量毛利 90%、…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c19" href="https://x.com/rohanpaul_ai/status/2115261691906978233" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">19</span><span class="src-chip">X：Rohan Paul (@rohanpaul_ai)</span></div>
+      <div class="card-meta"><span class="time">今天 09:57</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 41</span></div>
+      <h3 class="card-title">Bloomberg：OpenAI 计划采购 Google TPU 作为算力布局一部分</h3>
+      <p class="card-sum">据 Bloomberg 报道，OpenAI 计划向 Google 采购 AI 芯片，把直接竞争对手的处理器纳入自身算力…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c20" href="https://www.ithome.com/1/019/043.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">20</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 17:18</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 41</span></div>
+      <h3 class="card-title">央视实测 AI 可复原被打码的二维码，专家提示覆盖 90% 区域可防破解</h3>
+      <p class="card-sum">央视新闻实测发现，AI 图片工具能否复原被打码的二维码，取决于涂鸦是否盖住核心数据区：只遮挡外围或涂得不够厚时能复原成…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c21" href="https://x.com/rohanpaul_ai/status/2115229180115988805" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">21</span><span class="src-chip">X：Rohan Paul (@rohanpaul_ai)</span></div>
+      <div class="card-meta"><span class="time">今天 07:48</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 41</span></div>
+      <h3 class="card-title">Anthropic 与美国 GSA 扩大合作，政府购买 Claude 享 40% 折扣</h3>
+      <p class="card-sum">Anthropic 通过与美国 GSA 的新 OneGov 协议，向联邦、州、地方、部落及领地政府以 40% 折扣提供…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div></section><section id="sec-3" class="section"><h2 class="sec-head" style="--c:#d97706"><span class="dot" style="background:#d97706"></span>论文研究<span class="sec-count">7</span></h2><div class="grid">    <a class="card" id="c22" href="https://the-decoder.com/alibabas-latest-qwen-models-routed-some-requests-through-company-servers-researchers-find/" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">22</span><span class="src-chip">The Decoder：AI News（RSS）</span></div>
+      <div class="card-meta"><span class="time">今天 03:45</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 41</span></div>
+      <h3 class="card-title">研究发现阿里 Qwen3.8 系列模型在部分请求中调用阿里云代理服务器</h3>
+      <p class="card-sum">研究机构报告称，阿里 Qwen3.8 系列部分模型会在请求受阻时尝试通过阿里云代理（aliyuncs.com）转发流量…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c23" href="https://www.ithome.com/1/018/755.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">23</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 10:01</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 38</span></div>
+      <h3 class="card-title">OpenAI 公示 GPT-6.1 Terra 安全测试：整体风险下降，破坏性行为标记率上升</h3>
+      <p class="card-sum">据 bleepingcomputer 报道，OpenAI 最新公示的安全评估显示，GPT-6.1 Terra 在 48…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c24" href="https://www.marktechpost.com/2026/10/27/leann-vector-index-mlsys-2026/" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">24</span><span class="src-chip">MarkTechPost（RSS）</span></div>
+      <div class="card-meta"><span class="time">今天 05:54</span><span class="tag ovs">海外</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 35</span></div>
+      <h3 class="card-title">UC Berkeley 开源向量索引 LEANN 将 60M chunk 的 RAG 索引从 201 GB 压缩到 6 GB</h3>
+      <p class="card-sum">UC Berkeley Sky Computing Lab 开源了向量索引 LEANN，通过在查询时重算嵌入而非存储向…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c25" href="https://www.anthropic.com/research/agents-judgment-calls" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">25</span><span class="src-chip">Anthropic：Research（发表成果 · 网页）</span></div>
+      <div class="card-meta"><span class="time">昨天 00:00</span><span class="tag ovs">海外</span><span class="tag score">相关 34</span></div>
+      <h3 class="card-title">Anthropic 研究：AI 智能体的隐性倾向如何影响 50 名专业分析师的判断决策</h3>
+      <p class="card-sum">Anthropic 发表研究，让 50 名有因果推断经验的专业分析师用 Claude Code（Claude Opus…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c26" href="https://arstechnica.com/science/2026/10/vibe-genes-naturalish-language-comes-to-protein-genome-design-software/" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">26</span><span class="src-chip">Ars Technica：AI（RSS）</span></div>
+      <div class="card-meta"><span class="time">今天 02:49</span><span class="tag ovs">海外</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 30</span></div>
+      <h3 class="card-title">自然语言走进蛋白质与基因组设计：Pinal 与 Hugging Face 的 Carbon X</h3>
+      <p class="card-sum">Ars Technica 介绍了一种以自然语言提示设计蛋白质的工具 Pinal，它由 T2struct 将文本转为结构…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c27" href="https://browser-use.com/posts/odysseys2-long-horizon-web-agent-benchmark" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">27</span><span class="src-chip">Browser Use</span></div>
+      <div class="card-meta"><span class="time">昨天 08:00</span><span class="tag ovs">海外</span><span class="tag muted">未入精选</span><span class="tag score">相关 27</span></div>
+      <h3 class="card-title">CMU 与 Browser Use 发布长程网页智能体基准 Odysseys2，GPT-6 Astra 完成 47/100 任务</h3>
+      <p class="card-sum">卡内基梅隆大学与 Browser Use 合作发布长程网页智能体基准 Odysseys2，含 100 个真实网页长任务…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c28" href="https://www.marktechpost.com/2026/10/28/flashmap-flow-map-speculative-decoding/" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">28</span><span class="src-chip">MarkTechPost（RSS）</span></div>
+      <div class="card-meta"><span class="time">今天 16:18</span><span class="tag ovs">海外</span><span class="tag muted">未入精选</span><span class="tag score">相关 21</span></div>
+      <h3 class="card-title">Polymathic AI 与普林斯顿等机构发布 FlashMap，以 flow map 起草器实现最高 6.14x 无损解码加速</h3>
+      <p class="card-sum">Polymathic AI、普林斯顿大学、USC ISI、NYU 与 Flatiron Institute 的研究者发…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div></section><section id="sec-4" class="section"><h2 class="sec-head" style="--c:#db2777"><span class="dot" style="background:#db2777"></span>技巧与观点<span class="sec-count">7</span></h2><div class="grid">    <a class="card" id="c29" href="https://github.com/inclusionAI/ubtree" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="1">
+      <div class="card-top"><span class="num">29</span><span class="src-chip">蚂蚁 inclusionAI：GitHub 新仓库</span></div>
+      <div class="card-meta"><span class="time">今天 15:48</span><span class="tag dom">国内</span><span class="tag rel">★ AI4Science</span><span class="tag muted">未入精选</span><span class="tag score">相关 54</span></div>
+      <h3 class="card-title">蚂蚁 inclusionAI 发布 UBTree 项目页：用 Unigram 与 Bigram 模型并行树草稿加速投机解码</h3>
+      <p class="card-sum">蚂蚁 inclusionAI 上线 UBTree 项目页，介绍其用 Unigram 与 Bigram 模型做并行树草稿…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c30" href="https://x.com/shao__meng/status/2115332272152826248" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="1" data-rel="0">
+      <div class="card-top"><span class="num">30</span><span class="src-chip">X：邵猛 (@shao__meng)</span></div>
+      <div class="card-meta"><span class="time">今天 14:38</span><span class="tag ovs">海外</span><span class="tag pol">政策/协议</span><span class="tag muted">未入精选</span><span class="tag score">相关 37</span></div>
+      <h3 class="card-title">三套 Agent Skills 组合复刻顶级 iOS App 设计</h3>
+      <p class="card-sum">作者介绍一组用于逆向学习顶级 iOS App 设计的 Agent Skills 组合：Appllama Skills …</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c31" href="https://www.ithome.com/1/018/916.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">31</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 14:57</span><span class="tag dom">国内</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 36</span></div>
+      <h3 class="card-title">CVE Tracker 可视化：AI 成放大器，2026 年漏洞报告数量陡增</h3>
+      <p class="card-sum">开发者 @0x_Osprey 制作网页 CVE Tracker，用趋势图追踪已获 CVE 编号的漏洞数量，显示 202…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c32" href="https://www.ithome.com/1/018/876.htm" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">32</span><span class="src-chip">IT之家·人工智能</span></div>
+      <div class="card-meta"><span class="time">今天 12:10</span><span class="tag dom">国内</span><span class="tag muted">未入精选</span><span class="tag score">相关 35</span></div>
+      <h3 class="card-title">Anthropic 招聘负责人 Felix Rieseberg 宣布取消团队编程面试</h3>
+      <p class="card-sum">Anthropic 招聘经理、Claude 相关产品工程负责人 Felix Rieseberg 表示已在本月团队招聘流…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c33" href="https://x.com/shao__meng/status/2115247718608310389" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">33</span><span class="src-chip">X：邵猛 (@shao__meng)</span></div>
+      <div class="card-meta"><span class="time">今天 09:02</span><span class="tag ovs">海外</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 34</span></div>
+      <h3 class="card-title">ai-app-playbook 开源：用 Coding Agent 按固定栈做出能赚钱的消费级 AI App</h3>
+      <p class="card-sum">邵猛介绍 @blakeandersonw 开源的 ai-app-playbook，一份给 coding agent 执…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c34" href="https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&amp;mid=2247496882&amp;idx=1&amp;sn=dbc2683bf7bd56abfb5982ec128b89ca" target="_blank" rel="noopener noreferrer"
+       data-dom="1" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">34</span><span class="src-chip">公众号：小红书技术（dots.llm）</span></div>
+      <div class="card-meta"><span class="time">今天 17:59</span><span class="tag dom">国内</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 34</span></div>
+      <h3 class="card-title">小红书与 Rokid 合作：蜜薯 Personal Agent 如何用智能眼镜走进真实世界</h3>
+      <p class="card-sum">小红书 2049 Lab 与 Rokid 合作，以智能眼镜为载体打造 AI 生活搭子“蜜薯”，在用户授权下按需感知现场…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a>    <a class="card" id="c35" href="https://x.com/shao__meng/status/2115345069570212202" target="_blank" rel="noopener noreferrer"
+       data-dom="0" data-pol="0" data-rel="0">
+      <div class="card-top"><span class="num">35</span><span class="src-chip">X：邵猛 (@shao__meng)</span></div>
+      <div class="card-meta"><span class="time">今天 15:29</span><span class="tag ovs">海外</span><span class="tag eco">开源/生态</span><span class="tag muted">未入精选</span><span class="tag score">相关 33</span></div>
+      <h3 class="card-title">LangChain 开源 Content Studio 设计 Agent 的四个月实践详解</h3>
+      <p class="card-sum">作者详解 LangChain 开源的 Content Studio（Slack 里的 Design Agent）四个月…</p>
+      <span class="card-link">阅读原文 &rarr;</span>
+    </a></div></section>
+
+  <footer>
+    <p>本期共 35 条 · 数据源：<a href="https://aihot.news/" target="_blank" rel="noopener noreferrer">AIHOT</a>（https://aihot.news/）</p>
+    <p>生成时间：2026 年 10 月 28 日 19:00（北京时间） · 排序为本地加权结果，不代表 AI HOT 官方排序；引用数字/政策请以原文为准</p>
+  </footer>
+</main>
+<script>
+document.querySelectorAll('.filters button').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.filters button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    var f=b.dataset.f;
+    document.querySelectorAll('.card,.radar-row').forEach(function(c){
+      var ok=true;
+      if(f==='dom')ok=c.dataset.dom==='1';
+      if(f==='pol')ok=c.dataset.pol==='1';
+      if(f==='rel')ok=c.dataset.rel==='1';
+      c.style.display=ok?'':'none';
+    });
+    document.querySelectorAll('.section').forEach(function(s){
+      var any=Array.prototype.some.call(s.querySelectorAll('.card'),function(c){return c.style.display!=='none'});
+      s.style.display=any?'':'none';
+    });
+    var rd=document.querySelector('.radar');
+    if(rd){var any2=Array.prototype.some.call(rd.querySelectorAll('.radar-row'),function(c){return c.style.display!=='none'});
+      rd.style.display=any2?'':'none';}
+  };
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 晨报雷达 · 实时与往期</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1f2937;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px 60px}
+.hero{background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 55%,#6d28d9 100%);color:#fff;padding:44px 18px 36px;border-radius:0 0 22px 22px}
+.hero .inner{max-width:1100px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:3px;opacity:.85;text-transform:uppercase}
+.hero h1{font-size:32px;margin:8px 0 6px;font-weight:800}
+.hero .sub{opacity:.92;font-size:15px}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:9px 14px;font-size:13px}
+.stat b{font-size:19px;display:block}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;transition:.15s}
+.btn.primary{background:#fff;color:#312e81}
+.btn.primary:hover{background:#eef2ff}
+.btn.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35)}
+.btn.ghost:hover{background:rgba(255,255,255,.22)}
+.latest{margin-top:12px;font-size:12.5px;opacity:.85}
+.latest a{color:#fde68a;text-decoration:none}
+.live-card{margin-top:26px;background:#fff;border:1px solid #e8ecf3;border-radius:16px;padding:22px;display:flex;gap:20px;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(15,23,42,.05);flex-wrap:wrap}
+.live-card h2{font-size:20px;margin-bottom:5px}
+.live-card p{color:#64748b;font-size:14px;max-width:640px}
+.live-card .go{white-space:nowrap;background:#111827;color:#fff;text-decoration:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px}
+.live-card .go:hover{background:#312e81}
+.archive{margin-top:34px}
+.archive-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.archive-head h2{font-size:22px}
+.tabs{display:flex;gap:6px;margin-left:auto;background:#eef2f7;padding:4px;border-radius:999px}
+.tabs button{border:0;background:transparent;color:#475569;border-radius:999px;padding:6px 16px;font-size:13.5px;cursor:pointer;font-weight:600}
+.tabs button.on{background:#fff;color:#111827;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:13px}
+.dc{display:flex;flex-direction:column;gap:7px;background:#fff;border:1px solid #eceef1;border-radius:13px;padding:14px;text-decoration:none;color:inherit;transition:.16s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.dc:hover{transform:translateY(-3px);border-color:#cbd5e1;box-shadow:0 8px 20px rgba(0,0,0,.09)}
+.dc-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.dc-date{font-size:15px;font-weight:800;color:#0f172a}
+.dc-badge{font-size:10.5px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;border-radius:999px;padding:1px 7px}
+.dc-sub{font-size:12px;color:#94a3b8}
+.bars{display:flex;gap:2px;height:6px;border-radius:999px;overflow:hidden;background:#f1f5f9}
+.bars i{display:block;height:100%}
+.dc-open{margin-top:auto;font-size:12.5px;color:#2563eb;font-weight:700}
+.empty{grid-column:1/-1;text-align:center;color:#94a3b8;padding:30px;border:1px dashed #d8dee6;border-radius:12px;background:#fafbfc}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid #e5e7eb;font-size:12.5px;color:#64748b;text-align:center}
+footer a{color:#2563eb;text-decoration:none}
+@media(max-width:520px){
+  .hero{padding:32px 14px 28px}
+  .hero h1{font-size:24px}
+  .wrap{padding:0 12px 50px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .live-card{padding:16px}
+  .tabs{margin-left:0}
+}
+</style>
+</head>
+<body>
+<header class="hero"><div class="inner">
+  <div class="eyebrow">AI HOT · 个性化资讯雷达</div>
+  <h1>AI 晨报雷达</h1>
+  <p class="sub">实时拉取 · 按关注画像重排 · 可回溯往期日报与周报</p>
+  <div class="stats">
+    <div class="stat">日报<b id="stDaily">–</b></div>
+    <div class="stat">周报<b id="stWeekly">–</b></div>
+    <div class="stat">最新一期<b id="stLatest">–</b></div>
+  </div>
+  <div class="cta">
+    <a class="btn primary" href="live.html">打开实时晨报 &rarr;</a>
+    <a class="btn ghost" href="#archive">浏览往期</a>
+  </div>
+  <div class="latest" id="latestLine"></div>
+</div></header>
+
+<main class="wrap">
+  <section class="live-card">
+    <div>
+      <h2>今天的晨报，按你的方向重排</h2>
+      <p>四种关注画像（科研 / 开发者 / 产品 / 通用）、同一事件自动去重、灵感雷达、国内与政策过滤。打开即用，无需登录。</p>
+    </div>
+    <a class="go" href="live.html">进入实时版 &rarr;</a>
+  </section>
+
+  <section id="archive" class="archive">
+    <div class="archive-head">
+      <h2>往期归档</h2>
+      <div class="tabs">
+        <button data-t="daily" class="on">日报</button>
+        <button data-t="weekly">周报</button>
+      </div>
+    </div>
+    <div id="grid" class="grid"></div>
+  </section>
+
+  <footer>
+    <p>数据源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a> 公开接口 · 标题与摘要版权归原作者</p>
+    <p>排序为本地画像加权结果，不代表 AI HOT 官方排序 · <a href="https://github.com/cotigo-cmd/AI_news" target="_blank" rel="noopener noreferrer">GitHub 仓库</a></p>
+  </footer>
+</main>
+
+<script>
+const ARCHIVE = /*__ARCHIVE__*/{"daily":[],"weekly":[]};
+const COLORS = ["#2563eb","#7c3aed","#0d9488","#d97706","#db2777"];
+let state = {type:"daily"};
+
+function renderStats(){
+  document.getElementById("stDaily").textContent = ARCHIVE.daily.length;
+  document.getElementById("stWeekly").textContent = ARCHIVE.weekly.length;
+  const latest = ARCHIVE.daily[0];
+  document.getElementById("stLatest").textContent = latest ? latest.label : "–";
+  document.getElementById("latestLine").innerHTML = latest
+    ? '最新归档：<a href="'+latest.href+'">'+latest.label+' · '+latest.weekday+' · '+latest.total+' 条</a>'
+    : "";
+}
+
+function card(e, isLatest){
+  const total = e.secs.reduce((a,b)=>a+b,0) || e.total || 0;
+  const bars = e.secs.map((n,i)=>'<i style="flex:'+Math.max(n,0.01)+';background:'+COLORS[i]+'"></i>').join("");
+  return '<a class="dc" href="'+e.href+'">'
+    + '<div class="dc-top"><span class="dc-date">'+e.label+'</span>'+(isLatest?'<span class="dc-badge">最新</span>':'')+'</div>'
+    + '<div class="dc-sub">'+e.year+' · '+e.weekday+' · '+total+' 条</div>'
+    + '<div class="bars">'+(bars||'<i style="flex:1;background:#e2e8f0"></i>')+'</div>'
+    + '<div class="dc-open">打开 &rarr;</div></a>';
+}
+
+function renderGrid(){
+  const list = ARCHIVE[state.type] || [];
+  const grid = document.getElementById("grid");
+  grid.innerHTML = list.length
+    ? list.map((e,i)=>card(e, i===0)).join("")
+    : '<div class="empty">暂无该类型的归档</div>';
+}
+
+document.querySelectorAll(".tabs button").forEach(b=>{
+  b.onclick=function(){
+    document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    state.type=b.dataset.t;
+    renderGrid();
+  };
+});
+
+renderStats();
+renderGrid();
+</script>
+</body>
+</html>
