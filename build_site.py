@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""构建发布目录 site/（WorkBuddy 发布 + GitHub Pages 共用同一份内容）。
+"""构建发布目录 AI_News_site/（WorkBuddy 发布 + GitHub Pages 共用同一份内容）。
 
 产物：
-  site/index.html          归档索引页（实时入口 + 日报/周报归档）
-  site/live.html           实时版（内嵌当日兜底快照）
-  site/archive/daily/*.html    日报归档
-  site/archive/weekly/*.html   周报归档
+  AI_News_site/index.html         归档索引页（实时入口 + 日报/周报归档）
+  AI_News_site/live.html          实时版（内嵌当日兜底快照）
+  AI_News_site/archive/daily/*.html    日报归档
+  AI_News_site/archive/weekly/*.html   周报归档
 
 用法：
   python build_site.py            # 同步归档 + 建索引 + 建实时页（需联网拉兜底）
@@ -19,7 +19,7 @@ import json
 import datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-SITE = os.path.join(ROOT, "site")
+SITE = os.path.join(os.path.dirname(ROOT), "AI_News_site")
 ARCHIVE = os.path.join(SITE, "archive")
 INDEX_TPL = os.path.join(ROOT, "archive_index_template.html")
 LIVE_TPL = os.path.join(ROOT, "live_template.html")
