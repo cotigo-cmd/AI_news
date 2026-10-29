@@ -36,8 +36,10 @@ live.html                   实时版（自包含，内嵌离线兜底）
 archive/daily/*.html        日报归档（按日期）
 archive/weekly/*.html       周报归档（按日期）
 archive_index_template.html 索引页模板
-build_archive_index.py      扫描 archive/ 生成 index.html
+archive_index_template.html 索引页模板（含 __ARCHIVE__ 占位符）
 live_template.html          实时版前端模板（含 __FALLBACK__ 占位符）
+build_site.py               一键构建发布产物（归档同步 + 索引页 + 实时页）
+build_archive_index.py      扫描 archive/ 生成 index.html
 build_live_app.py           注入当日兜底数据，生成 live.html
 gen_briefing.py             本地晚报 / 周报生成器 + 定时任务
 screenshots/                桌面与移动端截图
@@ -62,6 +64,12 @@ python build_live_app.py live.html
 
 ```bash
 python build_archive_index.py
+```
+
+或者一条命令重建全部发布产物（归档同步 + 索引页 + 实时页）：
+
+```bash
+python build_site.py
 ```
 
 ## 可分享的视图
