@@ -1,6 +1,6 @@
 # AI_news · 实时个性化 AI 资讯雷达
 
-把每天上百条 AI 新闻，按你的关注画像重排成一份能直接读的晨报。
+把每天上百条 AI 新闻，按你的关注画像重排成一份能直接读的晚报。
 
 线上地址（索引页）：<https://cotigo-cmd.github.io/AI_news/>
 实时版：<https://cotigo-cmd.github.io/AI_news/live.html>
@@ -39,7 +39,7 @@ archive_index_template.html 索引页模板
 build_archive_index.py      扫描 archive/ 生成 index.html
 live_template.html          实时版前端模板（含 __FALLBACK__ 占位符）
 build_live_app.py           注入当日兜底数据，生成 live.html
-gen_briefing.py             本地晨报 / 周报生成器 + 定时任务
+gen_briefing.py             本地晚报 / 周报生成器 + 定时任务
 screenshots/                桌面与移动端截图
 .nojekyll                   关闭 Jekyll，静态文件原样发布
 ```

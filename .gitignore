@@ -1,5 +1,5 @@
 # 本地生成物
-AI_News_晨报_*.html
+AI_News_晚报_*.html
 AI_News_周报_*.html
 __pycache__/
 *.pyc

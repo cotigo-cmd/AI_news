@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""AI HOT 个性化晨报 / 周报 生成器 v2
+"""AI HOT 个性化晚报 / 周报 生成器 v2
 - 数据池：items?mode=all&window=24h|7d（含未入精选的公开条目，卡片会标注）
 - 排序：按用户画像加权，而非纯时间；国内 / 政策协议 / AI4Science 相关优先
 - 附加：去重、灵感雷达（可借鉴点）、标签过滤、北京时间人话
 用法:
-  python gen_briefing_v2.py daily  [YYYY-MM-DD]   当日晨报（忽略日期参数，始终取当前 24h 窗口）
+  python gen_briefing_v2.py daily  [YYYY-MM-DD]   当日晚报（忽略日期参数，始终取当前 24h 窗口）
   python gen_briefing_v2.py weekly [YYYY-MM-DD]   近 7 天回顾
-输出: AI_News_晨报_YYYY-MM-DD.html / AI_News_周报_YYYY-MM-DD.html
+输出: AI_News_晚报_YYYY-MM-DD.html / AI_News_周报_YYYY-MM-DD.html
 """
 import json, datetime, urllib.request, urllib.error, urllib.parse, re, difflib, sys, os
 
@@ -488,10 +488,10 @@ def gen_daily(_arg=None):
     lead_t, lead_p = get_lead(date_str)
     title_human = f"{now.year} 年 {now.month} 月 {now.day} 日 {WEEKDAY_CN[now.weekday()]}"
     subtitle = f"过去 24 小时 · 共 {total} 条（已去重）· 国内 {dom_n} 条"
-    html = render("晨报", title_human, subtitle, stats, total, dom_n, pol_n, rel_n, sec, radar,
+    html = render("晚报", title_human, subtitle, stats, total, dom_n, pol_n, rel_n, sec, radar,
                   lead_t, lead_p, now.strftime("%Y 年 %m 月 %d 日 %H:%M（北京时间）"),
                   "AIHOT", "https://aihot.news/")
-    out = os.path.join(OUTDIR, f"AI_News_晨报_{date_str}.html")
+    out = os.path.join(OUTDIR, f"AI_News_晚报_{date_str}.html")
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"[daily] {date_str} total={total} dom={dom_n} pol={pol_n} rel={rel_n} -> {out}")
