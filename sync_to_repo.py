@@ -76,7 +76,11 @@ def commit_and_push(do_push=True):
 
 
 def verify():
-    """校验远程 HEAD 与本地一致，且远程 live.html 的快照时间戳是今天。"""
+    """校验：工作区已清空、远程 HEAD 与本地一致、远程 live.html 快照是今天。"""
+    dirty = git("status", "--porcelain")
+    if dirty:
+        raise SystemExit("[verify] 失败：仍有未提交改动，内容没进仓库：\n" + dirty[:500])
+
     local = git("rev-parse", "HEAD")
     git("fetch", "origin", BRANCH, check=False)
     remote = git("rev-parse", "origin/" + BRANCH)
