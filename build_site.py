@@ -41,19 +41,25 @@ def fix_links(html, date, kind):
 
 
 def sync_archive():
-    """根目录的日报/周报产物 → site/archive/。"""
+    """根目录的日报/周报产物 → site/archive/；同时清理源已不存在的孤儿页。"""
     for kind, pattern in (("daily", "AI_News_晚报_*.html"), ("weekly", "AI_News_周报_*.html")):
         outdir = os.path.join(ARCHIVE, kind)
         os.makedirs(outdir, exist_ok=True)
         n = 0
+        written = set()
         for src in sorted(glob.glob(os.path.join(ROOT, pattern))):
             date = os.path.splitext(os.path.basename(src))[0].split("_")[-1]
             html = open(src, encoding="utf-8").read()
             html = fix_links(html, date, kind)
             dst = os.path.join(outdir, date + ".html")
             open(dst, "w", encoding="utf-8").write(html)
+            written.add(date + ".html")
             n += 1
-        print("archive/%s: %d 期" % (kind, n))
+        # 索引只反映实际存在的期数：删掉源文件已移除的旧页，避免“索引有、内容缺”
+        orphans = [f for f in os.listdir(outdir) if f.endswith(".html") and f not in written]
+        for f in orphans:
+            os.remove(os.path.join(outdir, f))
+        print("archive/%s: %d 期%s" % (kind, n, ("，清理孤儿 %d 个" % len(orphans)) if orphans else ""))
 
 
 def parse(path):
@@ -91,6 +97,14 @@ def build_index():
                 "title": title,
             })
         data[kind] = items
+
+    # 断档标记：日报相邻两期之间缺失的天数（周报按周节奏，不标）
+    for i, e in enumerate(data["daily"]):
+        e["miss"] = 0
+        if i > 0:
+            newer = datetime.date.fromisoformat(data["daily"][i - 1]["date"])
+            gap = (newer - datetime.date.fromisoformat(e["date"])).days - 1
+            e["miss"] = max(0, gap)
 
     tpl = open(INDEX_TPL, encoding="utf-8").read()
     if MARK not in tpl:
@@ -141,10 +155,40 @@ def build_live():
     print("live.html: %d 条兜底快照 · %s" % (len(keep), ts))
 
 
+def health_check():
+    """发布前体检：最新归档是否落后、兜底快照是否陈旧。返回问题列表。"""
+    problems = []
+    files = sorted(glob.glob(os.path.join(ARCHIVE, "daily", "*.html")), reverse=True)
+    if not files:
+        problems.append("归档为空")
+    else:
+        latest = os.path.splitext(os.path.basename(files[0]))[0]
+        try:
+            lag = (datetime.date.today() - datetime.date.fromisoformat(latest)).days
+            if lag > 1:
+                problems.append("最新晚报是 %s，落后 %d 天（今天该发的没发？）" % (latest, lag))
+        except ValueError:
+            pass
+    live = os.path.join(SITE, "live.html")
+    if os.path.exists(live):
+        m = re.search(r'"ts":"([^"]*)"', open(live, encoding="utf-8").read())
+        if m:
+            today = datetime.date.today()
+            if today.strftime("%Y 年 %m 月 %d 日") not in m.group(1):
+                problems.append("live.html 兜底快照不是今天：" + m.group(1))
+    return problems
+
+
 if __name__ == "__main__":
     os.makedirs(SITE, exist_ok=True)
     sync_archive()
     build_index()
     if "--no-live" not in sys.argv:
         build_live()
+    problems = health_check()
+    for p in problems:
+        print("[WARN]", p)
     print("完成 ->", SITE)
+    if problems:
+        print("体检未通过：%d 项，内容可能对不上标题。" % len(problems))
+        sys.exit(2)

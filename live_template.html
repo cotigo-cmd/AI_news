@@ -17,6 +17,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .live{font-size:12px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 10px}
 .live.off{background:rgba(251,191,36,.2);border-color:rgba(251,191,36,.5);color:#fde68a}
 .hero h1{font-size:29px;margin:8px 0 2px;font-weight:800}
+.hero h1.stale::after{content:" · 数据未更新";font-size:14px;font-weight:700;color:#fde68a;letter-spacing:.5px}
 .hero .sub{opacity:.9;font-size:14px}
 .profiles{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .profiles button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:6px 13px;font-size:13px;cursor:pointer;transition:.15s}
@@ -516,14 +517,48 @@ function closeDrawer(){
   setTimeout(function(){d.hidden=true;},220);
   document.body.style.overflow="";
 }
+function latestMs(){
+  let max=0;
+  for(const it of (state.items||[])){
+    const t=Date.parse(it.publishedAt||it.discoveredAt||"");
+    if(t>max) max=t;
+  }
+  return max;
+}
+function ageLabel(h){
+  if(!isFinite(h)) return "未知";
+  if(h<1) return Math.max(1,Math.round(h*60))+" 分钟前";
+  if(h<24) return (Math.round(h*10)/10)+" 小时前";
+  return Math.round(h/24)+" 天前";
+}
 function renderAll(){
   const P=PROFILES[state.profile], now=bjNow();
-  document.getElementById("dateTitle").textContent=now.y+" 年 "+now.m+" 月 "+now.d+" 日 "+WEEK[new Date(Date.UTC(now.y,now.m-1,now.d)).getUTCDay()];
+  // 标题用「数据时间」而非浏览器当前时间，避免标题新、内容旧的错觉
+  const lt=latestMs(), lp=lt?bjParts(new Date(lt).toISOString()):null;
+  const ageH=lt?(Date.now()-lt)/3600000:Infinity;
+  const stale=(!isFinite(ageH))||ageH>3;
+  const h1=document.getElementById("dateTitle");
+  if(lp){
+    h1.textContent=lp.y+" 年 "+lp.m+" 月 "+lp.d+" 日 "+WEEK[new Date(Date.UTC(lp.y,lp.m-1,lp.d)).getUTCDay()];
+  }else{
+    h1.textContent=now.y+" 年 "+now.m+" 月 "+now.d+" 日 "+WEEK[new Date(Date.UTC(now.y,now.m-1,now.d)).getUTCDay()];
+  }
+  h1.classList.toggle("stale", stale);
+  const sub=document.getElementById("subTitle");
+  if(sub) sub.textContent = lp
+    ? "数据更新于 "+lp.m+" 月 "+lp.d+" 日 "+lp.hh+":"+lp.mm+"（"+ageLabel(ageH)+"）· 共 "+state.items.length+" 条原始条目"
+    : "连接 AI HOT 公开接口";
   const badge=document.getElementById("liveBadge");
   badge.textContent=state.live?"实时拉取":"内置快照";
   badge.className="live"+(state.live?"":" off");
   document.getElementById("profileNote").textContent="当前画像："+P.label+" · 权重 领域相关性 "+Math.round(P.w.domain*100)+"% / 热度 "+Math.round(P.w.base*100)+"% / 政策 "+Math.round(P.w.policy*100)+"% / 国内 "+Math.round(P.w.domestic*100)+"%";
-  if(state.live) document.getElementById("banner").hidden=true;
+  const bnr=document.getElementById("banner");
+  if(!state.live && stale && lp){
+    bnr.hidden=false;
+    bnr.textContent="内置快照已 "+ageLabel(ageH)+"未更新（数据截至 "+lp.m+" 月 "+lp.d+" 日 "+lp.hh+":"+lp.mm+"），内容不代表当前。点右上角「刷新数据」重试。";
+  }else if(state.live){
+    bnr.hidden=true;
+  }
 
   // 画像按钮
   document.getElementById("profiles").innerHTML=Object.keys(PROFILES).map(k=>'<button data-p="'+k+'" class="'+(k===state.profile?"on":"")+'">'+PROFILES[k].label+"</button>").join("");
