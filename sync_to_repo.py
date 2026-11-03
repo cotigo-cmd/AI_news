@@ -61,10 +61,12 @@ def copy_all():
 
 def commit_and_push(do_push=True):
     git("add", "-A")
-    if git("status", "--porcelain"):
-        msg = "chore: 发布 %s 期内容（%s）" % (NOW.strftime("%Y-%m-%d"), NOW.strftime("%H:%M"))
-        git("commit", "-q", "-m", msg)
-        print("[commit]", msg)
+    msg = "chore: 发布 %s 期内容（%s）" % (NOW.strftime("%Y-%m-%d"), NOW.strftime("%H:%M"))
+    # 以 commit 自身返回码判断是否有变更，避免与 status 语义不一致
+    r = subprocess.run(("git", "commit", "-q", "-m", msg), cwd=REPO,
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if r.returncode == 0:
+        print("[commit]", msg, "->", git("rev-parse", "--short", "HEAD"))
     else:
         print("[commit] 无变更，跳过")
 
